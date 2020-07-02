@@ -40,7 +40,7 @@ const LocationMap = ({ getCoord }) => {
 				zoom={latlng.zoom > 0 ? latlng.zoom : 13}
 				style={{
 					height: "40vh",
-					width: "80%",
+					width: "100%",
 					marginBottom: "50px",
 					marginTop: "25px",
 					borderRadius: "20px",

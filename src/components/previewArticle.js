@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
 	Box,
 	Grid,
@@ -9,18 +9,16 @@ import {
 	CardActionArea,
 	Avatar,
 } from "@material-ui/core";
-import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import event from "../img/neigbourhood.svg";
 import { DateTime } from "luxon";
-
 import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../utils/paretaClient";
-
-import eventContext from "./contexts/eventContext";
+import parse from "html-react-parser";
 
 const useStyles = makeStyles((theme) => ({
 	wrapper: {
@@ -73,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 	cardImage: {
 		height: 0,
-		paddingTop: "56.25%",
+		paddingTop: "56.25%", // 16:9,
 		marginTop: "30",
 	},
 	cardContent: { background: "white", height: "100%" },
@@ -90,17 +88,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "1.2rem",
 		fontWeight: "600",
 		display: "-webkit-box",
-		WebkitLineClamp: 2,
-		WebkitBoxOrient: "vertical",
-		overflow: "hidden",
-	},
-
-	cardSubtext: {
-		fontFamily: "Montserrat",
-		fontSize: "0.9rem",
-		marginTop: "10px",
-		display: "-webkit-box",
-		WebkitLineClamp: 3,
+		WebkitLineClamp: 4,
 		WebkitBoxOrient: "vertical",
 		overflow: "hidden",
 	},
@@ -112,20 +100,20 @@ const useStyles = makeStyles((theme) => ({
 	container: { width: "100%", height: "auto", display: "flex" },
 }));
 
-const EventPreview = () => {
+const ArticlePreview = () => {
 	const classes = useStyles();
 
-	const [events, setEvents] = useState(null);
+	const [articles, setArticles] = useState(null);
 
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
 			refresh();
 			paretaClient
-				.get("/events")
+				.get("/articles/preview")
 				.then((res) => {
-					setEvents(res.data.slice(0, 7));
-					console.log(res.data);
+					setArticles(res);
+					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -142,55 +130,41 @@ const EventPreview = () => {
 					<Grid item container className={classes.container} xs={8}>
 						<Grid item xs={12}>
 							<Typography className={classes.sectionTitle}>
-								Latest Events
+								Latest Experiences
 							</Typography>
 						</Grid>
 						<Grid item container xs={12}>
-							{events ? (
-								events.map((item) => {
+							{articles ? (
+								articles.data.map((item) => {
 									return (
 										<Grid item className={classes.cardContainer} xs={3}>
 											<Card className={classes.card} raised={true}>
 												<CardActionArea
 													component={Link}
-													to={`/events/${item._id}`}
+													to={`/posts/${item._id}`}
 												>
 													<CardMedia
 														className={classes.cardImage}
 														image={event}
 													></CardMedia>
 													<CardContent className={classes.cardContent}>
-														<Typography className={classes.cardDate}>
-															{item.date}
-														</Typography>
 														<Typography className={classes.cardTitle}>
-															{item.name}
+															{item.title}
 														</Typography>
-														<Typography className={classes.cardSubtext}>
-															{item.description}
-														</Typography>
-														<AvatarGroup
-															className={classes.AvatarGroup}
-															spacing='small'
-															max={3}
-															classes={classes.avatar}
+														<Grid
+															container
+															alignItems='center'
+															style={{ marginTop: "20px" }}
 														>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-														</AvatarGroup>
+															<Grid item xs={3}>
+																<Avatar className={classes.avatar} alt='Remy'>
+																	{item.author.name.slice(0, 1).toUpperCase()}
+																</Avatar>
+															</Grid>
+															<Grid item xs={9}>
+																<Typography>{item.author.name}</Typography>
+															</Grid>
+														</Grid>
 													</CardContent>
 												</CardActionArea>
 											</Card>
@@ -206,12 +180,12 @@ const EventPreview = () => {
 								<Card
 									className={classes.cardNew}
 									component={Link}
-									to='/new-event'
+									to='/new-article'
 									raised={true}
 								>
 									<FontAwesomeIcon
 										className={classes.addIcon}
-										icon={faCalendarPlus}
+										icon={faPenSquare}
 										size='3x'
 									></FontAwesomeIcon>
 								</Card>
@@ -225,4 +199,4 @@ const EventPreview = () => {
 	);
 };
 
-export default EventPreview;
+export default ArticlePreview;

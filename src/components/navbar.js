@@ -1,10 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { Typography, Box, Menu, MenuItem } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+
+import actionsContext from "./contexts/actionsContext";
 
 const Nav = withStyles((theme) => ({
 	root: {
@@ -44,10 +46,23 @@ const useStyles = makeStyles((theme) => ({
 		cursor: "pointer",
 		textDecoration: "none",
 	},
+	menuItem: {
+		fontFamily: "Montserrat",
+		fontSize: "0.8rem",
+		letterSpacing: "0.7px",
+		lineHeight: "1.8",
+		borderRadius: "10px",
+		transition: "all 0.2s ease",
+		"&:hover": {
+			background: "#53237D",
+			color: "white",
+		},
+	},
+
 	icon: { color: "#53237D", marginLeft: "60px", cursor: "pointer" },
 }));
 
-const NavBar = ({ parentLogout }) => {
+const NavBar = () => {
 	const [menuAnchor, setMenuAnchor] = useState(null);
 	const handleProfileClick = (e) => {
 		setMenuAnchor(e.currentTarget);
@@ -56,13 +71,21 @@ const NavBar = ({ parentLogout }) => {
 	const handleMenuClose = () => {
 		setMenuAnchor(null);
 	};
+	const { parentLogout } = useContext(actionsContext);
 
 	const classes = useStyles();
 	return (
 		<Fragment>
 			<Nav>
 				<Box className={classes.wrapper}>
-					<Typography className={classes.brand}>Pareta</Typography>
+					<Typography
+						component={Link}
+						to='/dashboard'
+						style={{ textDecoration: "none" }}
+						className={classes.brand}
+					>
+						Pareta
+					</Typography>
 					<ul className={classes.navLinks}>
 						<li>
 							<Typography className={classes.link} component={Link} to='/posts'>
@@ -84,7 +107,7 @@ const NavBar = ({ parentLogout }) => {
 								component={Link}
 								to='/parents'
 							>
-								PARENTS
+								TALK
 							</Typography>
 						</li>
 						<li>
@@ -101,11 +124,33 @@ const NavBar = ({ parentLogout }) => {
 								keepMounted
 							>
 								<MenuItem
+									component={Link}
+									to='/dashboard'
+									className={classes.menuItem}
+								>
+									Dashboard
+								</MenuItem>
+								<MenuItem
+									component={Link}
+									to='/new-event'
+									className={classes.menuItem}
+								>
+									New Event
+								</MenuItem>
+								<MenuItem
+									component={Link}
+									to='/new-article'
+									className={classes.menuItem}
+								>
+									New Experience
+								</MenuItem>
+								<MenuItem
 									onClick={() => parentLogout()}
 									component={Link}
 									to='/'
+									className={classes.menuItem}
 								>
-									LogOut
+									Log Out
 								</MenuItem>
 							</Menu>
 						</li>

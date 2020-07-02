@@ -18,7 +18,7 @@ const DatePicker = ({ getTime }) => {
 
 	return (
 		<MuiPickersUtilsProvider utils={DateFnsUtils}>
-			<Grid container justify='flex-start'>
+			<Grid container justify='space-between'>
 				<KeyboardDatePicker
 					margin='normal'
 					id='date-picker-dialog'
@@ -32,7 +32,7 @@ const DatePicker = ({ getTime }) => {
 				/>
 				<KeyboardTimePicker
 					margin='normal'
-					style={{ marginLeft: "25px" }}
+					style={{ marginLeft: "35px" }}
 					id='time-picker'
 					label='Time picker'
 					value={selectedDate}

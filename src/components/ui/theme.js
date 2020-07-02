@@ -21,4 +21,8 @@ export default createMuiTheme({
 			xl: 1920,
 		},
 	},
+
+	overrides: {
+		MuiMenuItem: {},
+	},
 });

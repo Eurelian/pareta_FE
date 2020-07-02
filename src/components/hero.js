@@ -1,8 +1,10 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import heroMom from "../img/hero_mom_window.svg";
 import flowerAccent from "../img/flower_accent.svg";
+
+import parentContext from "./contexts/parentContext";
 
 const HeroButton = withStyles((theme) => ({
 	root: {
@@ -84,8 +86,11 @@ const capitalize = (str) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const Hero = ({ loggedInParent }) => {
+const Hero = () => {
 	const classes = useStyles();
+	const { loggedInParent } = useContext(parentContext);
+	console.log(loggedInParent);
+
 	if (loggedInParent)
 		return (
 			<Fragment>
