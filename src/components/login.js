@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -10,6 +11,13 @@ import loginImage from "../img/login.svg";
 import axios from "axios";
 
 import { Link } from "react-router-dom";
+import DividerBar from "../components/ui/Divider";
+//Error Handling
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import eventContext from "./contexts/eventContext";
+import errorContext from "./contexts/errorContext";
+import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 
 //STYLING
 const SignInButton = withStyles((theme) => ({
@@ -40,7 +48,7 @@ const SignUpButton = withStyles((theme) => ({
 		color: "#f5f5f5",
 		fontWeight: "bold",
 		letterSpacing: "2px",
-
+		marginBottom: "100px",
 		borderRadius: "20px",
 		height: "5vh",
 		marginTop: "20px",
@@ -58,7 +66,16 @@ const SignUpButton = withStyles((theme) => ({
 }))(Button);
 
 const InputField = withStyles((theme) => ({
-	root: { width: "70%", marginBottom: "30px", borderRadius: "20px" },
+	root: {
+		width: "70%",
+
+		borderRadius: "20px",
+		marginTop: "30px",
+		"& .MuiInputLabel-root": {
+			fontFamily: "Montserrat",
+			fontSize: "1.1rem",
+		},
+	},
 }))(TextField);
 
 const useStyles = makeStyles((theme) => ({
@@ -66,8 +83,10 @@ const useStyles = makeStyles((theme) => ({
 		maxWidth: "550px",
 		height: "700px",
 		borderRadius: "25px",
+		width: "100%",
 		margin: "0 auto",
 		flexGrow: 1,
+		boxShadow: "3px 6px 15px 3px rgba(0,0,0,0.1)",
 		background:
 			"linear-gradient(135deg, rgba(240,240,250,1) 0%, rgba(224,224,245,1) 100%, rgba(37,38,112,1) 0252670%)",
 		[theme.breakpoints.down("sm")]: {
@@ -77,8 +96,8 @@ const useStyles = makeStyles((theme) => ({
 
 	container: {
 		width: "100%",
-		height: "100vh",
-		background: "grey",
+		minHeight: "100vh",
+		background: "#F9F2FF",
 		display: "flex",
 		alignItems: "center",
 	},
@@ -123,7 +142,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "red",
 	},
 
-	input: { flexGrow: 2 },
+	input: { fontFamily: "Montserrat", fontSize: "1.3rem" },
 
 	btnSignIn: { flexGrow: 1 },
 
@@ -146,77 +165,110 @@ const useStyles = makeStyles((theme) => ({
 const Login = ({
 	handleLoginData,
 	handleLoginSubmit,
-	errorMessage,
+
 	loginData,
 }) => {
 	const classes = useStyles();
+	const { errorMessage, setErrorMessage } = useContext(eventContext);
+	const { isError, setIsError } = useContext(errorContext);
 
+	const notify = () =>
+		toast.error(`🙊 ${errorMessage}`, {
+			position: "top-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+	useEffect(() => {
+		if (errorMessage) {
+			setIsError(true);
+			notify();
+		}
+		setErrorMessage("");
+	}, [errorMessage]);
 	return (
 		<Fragment>
-			<Box className={classes.container}>
-				<Card className={classes.root}>
-					<form className={classes.form}>
-						<Box className={classes.imgContainer}>
-							<img
-								className={classes.img}
-								src={loginImage}
-								alt='login_img'
-							></img>
-						</Box>
-						<Typography className={classes.title}>
-							<span
-								style={{
-									fontSize: "3.8rem",
-									fontWeight: "600",
-									fontFamily: "Pacifico",
-									color: "",
-								}}
+			<div style={{ width: "100%", height: "100vh" }}>
+				<ToastContainer
+					position='top-right'
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
+				<Box className={classes.container}>
+					<Card className={classes.root}>
+						<form className={classes.form}>
+							<Box className={classes.imgContainer}>
+								<img
+									className={classes.img}
+									src={loginImage}
+									alt='login_img'
+								></img>
+							</Box>
+							<Typography onClick={() => notify()} className={classes.title}>
+								<span
+									style={{
+										fontSize: "4rem",
+										fontWeight: "600",
+										fontFamily: "Pacifico",
+										textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
+									}}
+								>
+									Welcome,
+								</span>
+								<br /> lovely parent
+							</Typography>
+							<InputField
+								error={isError ? true : false}
+								id='email'
+								label='E-mail'
+								onChange={(e) => handleLoginData(e)}
+								value={loginData.email}
+								InputProps={{ className: classes.input }}
+							/>
+							<InputField
+								error={isError ? true : false}
+								id='password'
+								type='password'
+								label='Password'
+								onChange={(e) => handleLoginData(e)}
+								value={loginData.password}
+								InputProps={{ className: classes.input }}
+								style={{ marginBottom: "30px" }}
+							/>
+
+							<SignInButton
+								className={classes.btnSignIn}
+								onClick={(e) => handleLoginSubmit(e)}
+								component={Link}
+								to='/dashboard'
 							>
-								Welcome
-							</span>
-							,
-							<br /> you parent you
-						</Typography>
-						<InputField
-							id='email'
-							label='E-mail'
-							onChange={(e) => handleLoginData(e)}
-							value={loginData.email}
-						/>
-						<InputField
-							id='password'
-							type='password'
-							label='Password'
-							onChange={(e) => handleLoginData(e)}
-							value={loginData.password}
-						/>
+								Sign In
+							</SignInButton>
 
-						<SignInButton
-							className={classes.btnSignIn}
-							onClick={(e) => handleLoginSubmit(e)}
-							component={Link}
-							to='/dashboard'
-						>
-							Sign In
-						</SignInButton>
+							<SignUpButton
+								className={classes.btnSignUp}
+								component={Link}
+								to='/signup'
+							>
+								Sign Up
+							</SignUpButton>
 
-						<SignUpButton
-							className={classes.btnSignUp}
-							component={Link}
-							to='/signup'
-						>
-							Sign Up
-						</SignUpButton>
-						{errorMessage && (
-							<Typography className={classes.error}>{errorMessage}</Typography>
-						)}
-						<Typography className={classes.subtitle}>
-							Forgot your password?
-						</Typography>
-						<Divider variant='middle' />
-					</form>
-				</Card>
-			</Box>
+							{/* <Typography className={classes.subtitle}>
+								Forgot your password?
+							</Typography> */}
+						</form>
+					</Card>
+				</Box>
+			</div>
 		</Fragment>
 	);
 };

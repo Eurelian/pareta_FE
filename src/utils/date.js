@@ -22,10 +22,11 @@ const DatePicker = ({ getTime }) => {
 				<KeyboardDatePicker
 					margin='normal'
 					id='date-picker-dialog'
-					label='Date picker dialog'
+					label='Set a date'
 					format='MM/dd/yyyy'
 					value={selectedDate}
 					onChange={handleDateChange}
+					InputProps={{ style: { fontFamily: "Montserrat" } }}
 					KeyboardButtonProps={{
 						"aria-label": "change date",
 					}}
@@ -34,9 +35,10 @@ const DatePicker = ({ getTime }) => {
 					margin='normal'
 					style={{ marginLeft: "35px" }}
 					id='time-picker'
-					label='Time picker'
+					label='Set a Time'
 					value={selectedDate}
 					onChange={handleDateChange}
+					InputProps={{ style: { fontFamily: "Montserrat" } }}
 					KeyboardButtonProps={{
 						"aria-label": "change time",
 					}}

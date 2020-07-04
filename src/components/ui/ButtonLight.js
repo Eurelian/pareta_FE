@@ -12,13 +12,14 @@ const MyLightButton = withStyles((theme) => ({
 		width: "100%",
 		borderRadius: "20px",
 		height: "5vh",
-		marginTop: "50px",
+
 		padding: "30px 40px",
-		boxShadow: "3px 3px 10px 2px rgba(0,0,0,0.2)",
+		boxShadow: "3px 3px 10px 2px rgba(0,0,0,0.1)",
 		transition: "all 0.5s ease",
 		"&:hover": {
 			backgroundColor: "#53237D",
 			transform: "translateY(-4px)",
+			boxShadow: "3px 3px 15px 2px rgba(0,0,0,0.2)",
 			color: "#F5EFFB",
 		},
 	},

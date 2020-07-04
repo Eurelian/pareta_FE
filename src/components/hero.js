@@ -44,26 +44,32 @@ const useStyles = makeStyles((theme) => ({
 	heroText: {
 		width: "50%",
 		display: "flex",
+
 		justifyContent: "center",
 		flexDirection: "column",
 	},
 
 	heroWelcome: {
-		fontSize: "3.2rem",
+		fontSize: "3.5rem",
 		fontFamily: "Raleway",
 		fontWeight: "800",
-		lineHeight: "1.2",
-		textShadow: "1px 2px 5px rgba(0,0,0,0.2)",
+		lineHeight: "1.4",
+		color: "#39364f",
+
+		textShadow: "1px 2px 5px rgba(0,0,0,0.1)",
 	},
 
 	heroSub: {
+		color: "#6F7287",
+		marginBottom: "30px",
+
 		marginLeft: "15%",
 		marginRight: "50px",
-		fontSize: "2rem",
+		fontSize: "1.5rem",
 		fontFamily: "Raleway",
 		fontWeight: "500",
 		lineHeight: "1.2",
-		textShadow: "1px 2px 5px rgba(0,0,0,0.2)",
+		textShadow: "1px 2px 5px rgba(0,0,0,0.1)",
 		lineHeight: "1.3",
 		width: "60%",
 	},
@@ -98,9 +104,13 @@ const Hero = () => {
 					<Box className={classes.heroText}>
 						<Typography className={classes.heroSub}>
 							<span className={classes.heroWelcome}>
-								{`Welcome ${capitalize(loggedInParent.name)}`},
+								Welcome,
+								<br /> {capitalize(loggedInParent.name)}
 							</span>
 							<br />
+						</Typography>
+						<Typography className={classes.heroSub}>
+							{" "}
 							get to connect with like minded parents in your area.
 						</Typography>
 						<HeroButton>Get started</HeroButton>

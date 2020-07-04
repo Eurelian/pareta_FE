@@ -11,6 +11,7 @@ import actionsContext from "./contexts/actionsContext";
 const Nav = withStyles((theme) => ({
 	root: {
 		background: "#F0F0FA",
+
 		height: "75px",
 		boxShadow: "2px 2px 20px 2px rgba(0,0,0,0.1)",
 		display: "flex",

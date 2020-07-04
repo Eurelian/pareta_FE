@@ -1,4 +1,6 @@
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
+
+//PACKAGES
 import {
 	Box,
 	Grid,
@@ -8,26 +10,24 @@ import {
 	CardMedia,
 	CardActionArea,
 	Avatar,
+	Fab,
 } from "@material-ui/core";
 import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import event from "../img/neigbourhood.svg";
-import { DateTime } from "luxon";
 
+//ASSETS
+import event from "../img/neigbourhood.svg";
+
+//UTILS
 import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../utils/paretaClient";
+import { handleDate } from "../utils/dateConversion";
 
-import eventContext from "./contexts/eventContext";
-
+//STYLES
 const useStyles = makeStyles((theme) => ({
-	wrapper: {
-		width: "60%",
-		margin: "0 auto",
-	},
-
 	divider: {
 		margin: "0 auto",
 		marginTop: "50px",
@@ -37,46 +37,53 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "#53237D",
 		boxShadow: "1px 1px 5px 1px rgba(0,0,0,0.1)",
 	},
-
-	sectionTitle: { fontSize: "2rem", fontFamily: "Montserrat" },
+	gridContainer: { padding: "0 20px" },
+	sectionTitle: {
+		fontSize: "2rem",
+		fontFamily: "Montserrat",
+		marginBottom: "35px",
+		marginTop: "25px",
+	},
 
 	gridContainer: { marginTop: "30px" },
 
-	card: {
+	container: {
 		width: "100%",
-		background: "red",
-		borderRadius: "15px",
-	},
-
-	cardNew: {
-		order: "1",
-		width: "100%",
-		borderRadius: "15px",
-		height: "160px",
+		maxWidth: "1270px",
+		height: "auto",
 		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		transition: "all 0.4s ease",
-		cursor: "pointer",
-		"&:hover": { transform: "translateY(-5px)" },
-		"&:hover $addIcon": { color: "#53237D" },
+		margin: "0 auto",
 	},
-
-	addIcon: { color: "#EBEBEB", transition: "all 0.3s ease" },
 
 	cardContainer: {
+		maxWidth: "300px",
+		minWidth: "250px",
+		margin: "5px 5px",
 		width: "100%",
-		height: "auto",
-		padding: "15px",
 		marginBottom: "15px",
 	},
+
+	card: {
+		width: "100%",
+		minWidth: "250px",
+		background: "#F9F2FF",
+		borderRadius: "15px",
+		transition: "all 0.4s ease",
+		"&:hover": {
+			transform: "translateY(-7px)",
+			boxShadow: "2px 3px 15px 2px rgba(0,0,0,0.1)",
+			zIndex: 100,
+		},
+	},
+
+	addIcon: { color: "#DFACEC", transition: "all 0.3s ease" },
 
 	cardImage: {
 		height: 0,
 		paddingTop: "56.25%",
 		marginTop: "30",
 	},
-	cardContent: { background: "white", height: "100%" },
+	cardContent: { background: "white", minHeight: "200px" },
 
 	cardDate: {
 		color: "#8638C9",
@@ -100,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "0.9rem",
 		marginTop: "10px",
 		display: "-webkit-box",
-		WebkitLineClamp: 3,
+		WebkitLineClamp: 2,
 		WebkitBoxOrient: "vertical",
 		overflow: "hidden",
 	},
@@ -109,7 +116,31 @@ const useStyles = makeStyles((theme) => ({
 	AvatarGroup: {
 		marginTop: "15px",
 	},
-	container: { width: "100%", height: "auto", display: "flex" },
+
+	addbtn: {
+		background: "#F9F2FF",
+		width: "100px",
+		height: "100px",
+		margin: "0 auto",
+		transition: "all 0.4s ease",
+		boxShadow: "2px 3px 15px 2px rgba(0,0,0,0.2)",
+		"&:hover $addIcon": { color: "#53237D" },
+		"&:hover": {
+			background: "#F9F2FF",
+			transform: "translateY(-5px)",
+			boxShadow: "2px 3px 20px 2px rgba(0,0,0,0.1)",
+		},
+	},
+
+	cardAction: {
+		"& .Mui-focusVisible": {
+			display: "none",
+		},
+
+		"& .MuiCardActionArea-focusHighlight": {
+			background: "#8F4BD2",
+		},
+	},
 }));
 
 const EventPreview = () => {
@@ -117,6 +148,7 @@ const EventPreview = () => {
 
 	const [events, setEvents] = useState(null);
 
+	//Get Event Data
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -133,27 +165,33 @@ const EventPreview = () => {
 
 	return (
 		<Fragment>
-			<Grid container justify='center' direction='column'>
+			<Grid container direction='column'>
 				<Grid item xs={12}>
 					<div className={classes.divider}></div>
 				</Grid>
-				<Grid item container xs={12}>
-					<Grid item xs={2}></Grid>
-					<Grid item container className={classes.container} xs={8}>
+				<Grid item container className={classes.gridContainer} xs={12}>
+					<Grid container className={classes.container}>
 						<Grid item xs={12}>
 							<Typography className={classes.sectionTitle}>
 								Latest Events
 							</Typography>
 						</Grid>
-						<Grid item container xs={12}>
+						<Grid container justify='flex-start'>
 							{events ? (
 								events.map((item) => {
 									return (
-										<Grid item className={classes.cardContainer} xs={3}>
-											<Card className={classes.card} raised={true}>
+										<Grid
+											item
+											container
+											justify='center'
+											xs={3}
+											className={classes.cardContainer}
+										>
+											<Card className={classes.card}>
 												<CardActionArea
 													component={Link}
 													to={`/events/${item._id}`}
+													className={classes.cardAction}
 												>
 													<CardMedia
 														className={classes.cardImage}
@@ -161,7 +199,7 @@ const EventPreview = () => {
 													></CardMedia>
 													<CardContent className={classes.cardContent}>
 														<Typography className={classes.cardDate}>
-															{item.date}
+															{handleDate(item.date)}
 														</Typography>
 														<Typography className={classes.cardTitle}>
 															{item.name}
@@ -169,28 +207,7 @@ const EventPreview = () => {
 														<Typography className={classes.cardSubtext}>
 															{item.description}
 														</Typography>
-														<AvatarGroup
-															className={classes.AvatarGroup}
-															spacing='small'
-															max={3}
-															classes={classes.avatar}
-														>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-															<Avatar className={classes.avatar} alt='Remy'>
-																B
-															</Avatar>
-														</AvatarGroup>
+														<AvatarGroup></AvatarGroup>
 													</CardContent>
 												</CardActionArea>
 											</Card>
@@ -202,23 +219,27 @@ const EventPreview = () => {
 							)}
 
 							{/* Add New Event Card */}
-							<Grid item className={classes.cardContainer} xs={3}>
-								<Card
-									className={classes.cardNew}
+							<Grid
+								item
+								className={classes.cardContainer}
+								container
+								alignItems='center'
+								xs={3}
+							>
+								<Fab
 									component={Link}
 									to='/new-event'
-									raised={true}
+									className={classes.addbtn}
 								>
 									<FontAwesomeIcon
 										className={classes.addIcon}
 										icon={faCalendarPlus}
 										size='3x'
 									></FontAwesomeIcon>
-								</Card>
+								</Fab>
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item xs={2}></Grid>
 				</Grid>
 			</Grid>
 		</Fragment>

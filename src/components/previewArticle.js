@@ -8,6 +8,7 @@ import {
 	CardMedia,
 	CardActionArea,
 	Avatar,
+	Fab,
 } from "@material-ui/core";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,11 +22,6 @@ import { paretaClient, refresh } from "../utils/paretaClient";
 import parse from "html-react-parser";
 
 const useStyles = makeStyles((theme) => ({
-	wrapper: {
-		width: "60%",
-		margin: "0 auto",
-	},
-
 	divider: {
 		margin: "0 auto",
 		marginTop: "50px",
@@ -38,34 +34,43 @@ const useStyles = makeStyles((theme) => ({
 
 	sectionTitle: { fontSize: "2rem", fontFamily: "Montserrat" },
 
-	gridContainer: { marginTop: "30px" },
+	gridContainer: { padding: "0 20px" },
 
 	card: {
 		width: "100%",
-		background: "red",
+		minWidth: "250px",
+		background: "#F9F2FF",
 		borderRadius: "15px",
-	},
-
-	cardNew: {
-		order: "1",
-		width: "100%",
-		borderRadius: "15px",
-		height: "160px",
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
 		transition: "all 0.4s ease",
-		cursor: "pointer",
-		"&:hover": { transform: "translateY(-5px)" },
-		"&:hover $addIcon": { color: "#53237D" },
+		"&:hover": {
+			transform: "translateY(-7px)",
+			boxShadow: "2px 3px 15px 2px rgba(0,0,0,0.1)",
+			zIndex: 100,
+		},
 	},
 
-	addIcon: { color: "#EBEBEB", transition: "all 0.3s ease" },
+	addIcon: { color: "#DFACEC", transition: "all 0.3s ease" },
+
+	container: {
+		width: "100%",
+		maxWidth: "1270px",
+		height: "auto",
+		display: "flex",
+		margin: "0 auto",
+	},
+	sectionTitle: {
+		fontSize: "2rem",
+		fontFamily: "Montserrat",
+		marginBottom: "35px",
+		marginTop: "25px",
+	},
 
 	cardContainer: {
+		maxWidth: "300px",
+		minWidth: "250px",
+
+		margin: "5px 5px",
 		width: "100%",
-		height: "auto",
-		padding: "15px",
 		marginBottom: "15px",
 	},
 
@@ -74,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 		paddingTop: "56.25%", // 16:9,
 		marginTop: "30",
 	},
-	cardContent: { background: "white", height: "100%" },
+	cardContent: { background: "white", minHeight: "130px" },
 
 	cardDate: {
 		color: "#8638C9",
@@ -97,7 +102,30 @@ const useStyles = makeStyles((theme) => ({
 	AvatarGroup: {
 		marginTop: "15px",
 	},
-	container: { width: "100%", height: "auto", display: "flex" },
+	cardAction: {
+		"& .Mui-focusVisible": {
+			display: "none",
+		},
+
+		"& .MuiCardActionArea-focusHighlight": {
+			background: "#8F4BD2",
+		},
+	},
+
+	addbtn: {
+		background: "#F9F2FF",
+		width: "100px",
+		height: "100px",
+		margin: "0 auto",
+		transition: "all 0.4s ease",
+		boxShadow: "2px 3px 15px 2px rgba(0,0,0,0.2)",
+		"&:hover $addIcon": { color: "#53237D" },
+		"&:hover": {
+			background: "#F9F2FF",
+			transform: "translateY(-5px)",
+			boxShadow: "2px 3px 20px 2px rgba(0,0,0,0.1)",
+		},
+	},
 }));
 
 const ArticlePreview = () => {
@@ -121,25 +149,32 @@ const ArticlePreview = () => {
 
 	return (
 		<Fragment>
-			<Grid container justify='center' direction='column'>
+			<Grid container direction='column'>
 				<Grid item xs={12}>
 					<div className={classes.divider}></div>
 				</Grid>
-				<Grid item container xs={12}>
-					<Grid item xs={2}></Grid>
-					<Grid item container className={classes.container} xs={8}>
+				<Grid item container className={classes.gridContainer} xs={12}>
+					<Grid container className={classes.container}>
 						<Grid item xs={12}>
 							<Typography className={classes.sectionTitle}>
 								Latest Experiences
 							</Typography>
 						</Grid>
-						<Grid item container xs={12}>
+						<Grid container justify='flex-start'>
 							{articles ? (
 								articles.data.map((item) => {
 									return (
-										<Grid item className={classes.cardContainer} xs={3}>
-											<Card className={classes.card} raised={true}>
+										<Grid
+											item
+											container
+											justify='center'
+											key={item._id}
+											xs={3}
+											className={classes.cardContainer}
+										>
+											<Card className={classes.card}>
 												<CardActionArea
+													className={classes.cardAction}
 													component={Link}
 													to={`/posts/${item._id}`}
 												>
@@ -175,24 +210,28 @@ const ArticlePreview = () => {
 								<div>Loading</div>
 							)}
 
-							{/* Add New Event Card */}
-							<Grid item className={classes.cardContainer} xs={3}>
-								<Card
-									className={classes.cardNew}
+							{/* Add New Article Card */}
+							<Grid
+								item
+								className={classes.cardContainer}
+								container
+								alignItems='center'
+								xs={3}
+							>
+								<Fab
+									className={classes.addbtn}
 									component={Link}
 									to='/new-article'
-									raised={true}
 								>
 									<FontAwesomeIcon
 										className={classes.addIcon}
 										icon={faPenSquare}
 										size='3x'
 									></FontAwesomeIcon>
-								</Card>
+								</Fab>
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item xs={2}></Grid>
 				</Grid>
 			</Grid>
 		</Fragment>

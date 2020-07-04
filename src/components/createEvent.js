@@ -46,8 +46,14 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "Raleway",
 		fontWeight: "600",
 		marginBottom: "-50px",
+		color: "#39364f",
 	},
-	subtitle: { fontSize: "1.5rem", fontFamily: "Raleway", fontWeight: "600" },
+	subtitle: {
+		fontSize: "1.5rem",
+		fontFamily: "Raleway",
+		fontWeight: "600",
+		color: "#39364f",
+	},
 	fieldGroup: { marginTop: "50px" },
 	input: { fontFamily: "Raleway", fontSize: "2rem" },
 	textArea: { fontFamily: "Montserrat", fontSize: "1rem" },
@@ -72,6 +78,7 @@ const CreateEvent = () => {
 		handleEventSubmit,
 		isSubmitted,
 		errorMessage,
+		setErrorMessage,
 	} = useContext(eventContext);
 
 	//GET TITLE, DESCRIPTION, SIZE
@@ -105,7 +112,7 @@ const CreateEvent = () => {
 	};
 
 	const notify = () =>
-		toast(`${errorMessage}`, {
+		toast.error(`🙊${errorMessage}`, {
 			position: "top-center",
 			autoClose: 5000,
 			hideProgressBar: false,
@@ -116,6 +123,7 @@ const CreateEvent = () => {
 		});
 	useEffect(() => {
 		if (errorMessage) notify();
+		setErrorMessage("");
 	}, [errorMessage]);
 
 	return (
@@ -199,6 +207,7 @@ const CreateEvent = () => {
 											label='Event Size'
 											placeholder='Expected no. of participants'
 											type='number'
+											InputProps={{ style: { fontFamily: "Montserrat" } }}
 											style={{ width: "40%" }}
 											onChange={handleInput}
 										></Input>
@@ -237,7 +246,7 @@ const CreateEvent = () => {
 									</Typography>
 									<DatePicker getTime={getTime}></DatePicker>
 								</Grid>
-								<Grid item xs={12} style={{ width: "80%" }}>
+								<Grid item xs={12} style={{ width: "80%", marginTop: "100px" }}>
 									<Grid container justify='space-around'>
 										<Grid item xs={6} style={{ paddingLeft: "50px" }}>
 											<LightButton text={"Back"}></LightButton>
