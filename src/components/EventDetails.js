@@ -28,7 +28,46 @@ const useStyles = makeStyles((theme) => ({
 		backgroundPosition: "center center",
 		backgroundRepeat: "no-repeat",
 	},
-	title: { fontSize: "3rem", fontFamily: "Raleway", color: "#39364f" },
+	title: {
+		fontSize: "3rem",
+		fontFamily: "Raleway",
+		color: "#f5f5f5",
+		padding: "20px 50px",
+	},
+	titleContainer: {
+		background: "#53237D",
+		borderRadius: "20px 0 0 20px",
+		boxShadow: "2px 4px 15px 2px rgba(0,0,0,0.2)",
+		width: "100%",
+	},
+	subtitle: {
+		fontFamily: "Raleway",
+		color: "#39364f",
+		textAlign: "center",
+		fontSize: "1.1rem",
+		marginBottom: "5px",
+	},
+	subtext: {
+		fontFamily: "Montserrat",
+		color: "#39364f",
+		marginLeft: "15px",
+		textAlign: "center",
+	},
+	date: {
+		fontFamily: "Montserrat",
+		color: "#53237D",
+		fontSize: "1.1rem",
+		fontWeight: "bold",
+	},
+	sectionTitle: {
+		fontFamily: "Montserrat",
+		fontSize: "1.7rem",
+		fontWeight: "bold",
+		color: "#39364f",
+		marginBottom: "25px",
+	},
+	section: { marginTop: "50px" },
+	organizer: { fontFamily: "Montserrat", color: "#39364f", marginLeft: "15px" },
 	divider: {
 		margin: "0 auto",
 		marginTop: "50px",
@@ -47,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	btnContainer: { maxWidth: "350px", margin: "0 auto" },
 	mapContainer: {
-		maxWidth: "350px",
+		// maxWidth: "350px",
 		width: "100%",
 		maxHeight: "400px",
 		margin: "0 auto",
@@ -58,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
 		padding: "30px 50px",
 		borderRadius: "20px",
 		boxShadow: "2px 2px 20px 2px rgba(0,0,0,0.1)",
+		marginBottom: "150px",
 	},
 }));
 
@@ -90,7 +130,6 @@ const EventDetails = () => {
 				.get(`events/${id}`)
 				.then((res) => {
 					setSingleEvent(res.data);
-					console.log(res.data);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -117,9 +156,8 @@ const EventDetails = () => {
 				.get(`dashboard/events/created/${id}`)
 				.then((res) => {
 					setIsCreated(true);
-					console.log(isCreated);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => console.error(err));
 		}
 	}, []);
 
@@ -175,6 +213,7 @@ const EventDetails = () => {
 				handleOpen={dialogToggle}
 				handleDelete={handleEventDelete}
 			></DialogAlert>
+			{console.log(singleEvent)}
 			{singleEvent ? (
 				<Grid container className={classes.container}>
 					<Grid item xs={2}></Grid>
@@ -186,19 +225,27 @@ const EventDetails = () => {
 							<Paper className={classes.background}>
 								<Grid item xs={12}>
 									<Grid container alignItems='center' wrap='wrap'>
-										<Grid item xs container wrap='wrap'>
+										<Grid
+											item
+											xs={8}
+											container
+											wrap='wrap'
+											className={classes.titleContainer}
+										>
 											<Typography className={classes.title}>
 												{singleEvent.name}
 											</Typography>
 										</Grid>
 										<Grid
 											item
-											xs
+											xs={4}
 											container
 											wrap='wrap'
 											className={classes.mapContainer}
 										>
-											<EventMap></EventMap>
+											<EventMap
+												coord={singleEvent.geometry.coordinates}
+											></EventMap>
 										</Grid>
 									</Grid>
 								</Grid>
@@ -211,6 +258,9 @@ const EventDetails = () => {
 													<DividerBar></DividerBar>
 												</Grid>
 												<Grid item xs={12}>
+													<Typography className={classes.sectionTitle}>
+														Details
+													</Typography>
 													<Typography className={classes.description}>
 														{singleEvent.description}
 													</Typography>
@@ -219,7 +269,7 @@ const EventDetails = () => {
 										</Grid>
 										<Grid item xs={4}>
 											<Grid item xs={12}>
-												<Grid container wrap='wrap'>
+												<Grid container direction='column' alignItems='center'>
 													{isCreated ? (
 														<Grid item className={classes.btnContainer}>
 															<div onClick={dialogToggle}>
@@ -242,14 +292,27 @@ const EventDetails = () => {
 														</Grid>
 													)}
 
-													<Grid item xs={12}>
-														{handleDate(singleEvent.date)}
+													<Grid item xs={12} className={classes.section}>
+														<Typography className={classes.date}>
+															{" "}
+															{handleDate(singleEvent.date)}
+														</Typography>
 													</Grid>
-													<Grid item xs={12}>
-														{singleEvent.organizer.name}
+													<Grid item xs={12} className={classes.section}>
+														<Typography className={classes.subtitle}>
+															Hosted by
+														</Typography>
+														<Grid container alignItems='center'>
+															<Avatar size='xs'></Avatar>
+															<Typography className={classes.organizer}>
+																{singleEvent.organizer.name}
+															</Typography>
+														</Grid>
 													</Grid>
-													<Grid item xs={12}>
-														<Typography>Attending</Typography>
+													<Grid item xs={12} className={classes.section}>
+														<Typography className={classes.subtitle}>
+															Attending
+														</Typography>
 														<AvatarGroup max={3}>
 															{singleEvent.attending &&
 																singleEvent.attending.map((item, i) => (
@@ -258,6 +321,32 @@ const EventDetails = () => {
 																	</Avatar>
 																))}
 														</AvatarGroup>
+													</Grid>
+													<Grid item xs={12} className={classes.section}>
+														<Typography className={classes.subtitle}>
+															Children Age Group
+														</Typography>
+														<Typography className={classes.subtext}>
+															{singleEvent.age_group[0].from} -{" "}
+															{singleEvent.age_group[0].to} years
+														</Typography>
+													</Grid>
+													<Grid item xs={12} className={classes.section}>
+														<Typography className={classes.subtitle}>
+															Event Size
+														</Typography>
+														<Typography className={classes.subtext}>
+															{singleEvent.size} spots
+														</Typography>
+													</Grid>
+													<Grid item xs={12} className={classes.section}>
+														<Typography className={classes.subtitle}>
+															Places Left
+														</Typography>
+														<Typography className={classes.subtext}>
+															{singleEvent.size - singleEvent.attending.length}{" "}
+															spots
+														</Typography>
 													</Grid>
 												</Grid>
 											</Grid>

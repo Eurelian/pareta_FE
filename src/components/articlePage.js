@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import NavBar from "./navbar";
 import { Grid, Typography, Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,6 +9,9 @@ import { deepOrange, deepPurple } from "@material-ui/core/colors";
 import parse from "html-react-parser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+
+//CONTEXT
+import articleContext from "./contexts/articleContext";
 
 const useStyles = makeStyles((theme) => ({
 	title: {
@@ -65,28 +68,76 @@ const useStyles = makeStyles((theme) => ({
 
 const ArticlePage = () => {
 	const classes = useStyles();
+	const history = useHistory();
 	const { id } = useParams();
-	const [article, setArticle] = useState(null);
-	const [isBookmarked, setIsBookmarked] = useState(false);
 
-	const handleBookmark = () => {
-		setIsBookmarked(!isBookmarked);
+	const {
+		article,
+		articles,
+		setArticle,
+		setArticles,
+		setArticlesFavorite,
+	} = useContext(articleContext);
+
+	const [isBookmarked, setIsBookmarked] = useState(null);
+
+	//GET ARTICLE DATA
+	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
 			refresh();
-			if (!isBookmarked) {
-				paretaClient
-					.post(`/articles/favorite`, { id: id })
-					.then((res) => {
-						// setArticle(res.data);
-						console.log(res);
-					})
-					.catch((err) => console.log(err));
-			} else
-				paretaClient
-					.delete(`/dashboard/posts/favorite`, { id: id })
-					.then((res) => console.log(res))
-					.catch((err) => console.log(err));
+			paretaClient
+				.get(`/articles/${id}`)
+				.then((res) => {
+					setArticle(res.data);
+				})
+				.catch((err) => console.log(err));
+		}
+	}, []);
+
+	//CHECK IF ARTICLE IS FAVORITE
+	useEffect(() => {
+		const token = Cookies.get("parent-token");
+		if (token) {
+			paretaClient
+				.get(`/dashboard/posts/favorite/${id}`)
+				.then((res) => {
+					setIsBookmarked(res.data);
+
+					console.log(res);
+				})
+				.catch((err) => console.log(err));
+		}
+	}, []);
+
+	//ARTICLE ADD TO FAVORITE
+	const handleBookmark = () => {
+		const token = Cookies.get("parent-token");
+		if (token) {
+			refresh();
+			paretaClient
+				.post(`/articles/favorite`, { id: id })
+				.then((res) => {
+					setIsBookmarked(true);
+					console.log(res);
+				})
+				.catch((err) => console.log(err));
+		}
+	};
+
+	//ARTICLE REMOVE FROM FAVORITE
+	const handleBookmarkRemove = () => {
+		const token = Cookies.get("parent-token");
+		if (token) {
+			refresh();
+			paretaClient
+				.delete(`/dashboard/post/favorite/${id}`)
+				.then((res) => {
+					setIsBookmarked(false);
+					setArticlesFavorite(res.data.articles_favorite);
+					console.log(res);
+				})
+				.catch((err) => console.log(err));
 		}
 	};
 
@@ -97,46 +148,13 @@ const ArticlePage = () => {
 			paretaClient
 				.post(`/dashboard/favorite-parent`, { id: article.author._id })
 				.then((res) => {
-					// setArticle(res.data);
+					history.push("/parents");
 					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}
 	};
 
-	// useEffect(() => {
-	// 	const token = Cookies.get("parent-token");
-	// 	if (token) {
-	// 		refresh();
-	// 		if (isBookmarked) {
-	// 			paretaClient
-	// 				.post(`/articles/favorite`, { id: id })
-	// 				.then((res) => {
-	// 					// setArticle(res.data);
-	// 					console.log(res);
-	// 				})
-	// 				.catch((err) => console.log(err));
-	// 		} else
-	// 			paretaClient
-	// 				.delete(`/dashboard/posts/favorite`, { id: id })
-	// 				.then((res) => console.log(res))
-	// 				.catch((err) => console.log(err));
-	// 	}
-	// }, [isBookmarked]);
-
-	useEffect(() => {
-		const token = Cookies.get("parent-token");
-		if (token) {
-			refresh();
-			paretaClient
-				.get(`/articles/${id}`)
-				.then((res) => {
-					setArticle(res.data);
-					console.log(res.data.author._id);
-				})
-				.catch((err) => console.log(err));
-		}
-	}, []);
 	if (article)
 		return (
 			<Fragment>
@@ -194,7 +212,11 @@ const ArticlePage = () => {
 										<Grid container justify='flex-end' alignItems='center'>
 											<Grid item xs style={{ flexGrow: 0 }}>
 												<FontAwesomeIcon
-													onClick={() => handleBookmark()}
+													onClick={
+														isBookmarked
+															? () => handleBookmarkRemove()
+															: () => handleBookmark()
+													}
 													style={
 														isBookmarked
 															? { color: `#53237d` }

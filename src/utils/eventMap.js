@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 
-const EventMap = () => {
-	const [coord, setCoord] = useState(null);
-
+const EventMap = ({ coord }) => {
 	// const position = [lat, lng];
-	const position = [24, 35];
+	const position = [coord[0], coord[1]];
 	return (
 		<Map
 			center={position}
@@ -23,9 +21,7 @@ const EventMap = () => {
 				url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 			/>
 			<Marker position={position}>
-				<Popup>
-					A pretty CSS3 popup. <br /> Easily customizable.
-				</Popup>
+				<Popup>Event Location</Popup>
 			</Marker>
 		</Map>
 	);

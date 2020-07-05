@@ -19,6 +19,7 @@ import {
 	CardActionArea,
 	Avatar,
 	Fab,
+	TextField,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
@@ -164,15 +165,17 @@ const EventsPage = () => {
 
 	const {
 		eventData,
+		setEventData,
 		setEventsCreated,
 		setIsCreated,
 		eventsCreated,
 		eventsSubscribed,
 		setEventsSubscribed,
+		eventSearch,
+		setEventSearch,
 	} = useContext(eventContext);
 
-	const events = eventData.data;
-	console.log(events);
+	//Get Created Events
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -186,6 +189,24 @@ const EventsPage = () => {
 				.catch((err) => console.log(err));
 		}
 	}, []);
+
+	//SEARCH FOR EVENT
+
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		console.log("works");
+		const token = Cookies.get("parent-token");
+		if (token) {
+			refresh();
+			paretaClient
+				.post(`/events/search`, { query: eventSearch })
+				.then((res) => {
+					setEventData(res.data);
+					console.log(res);
+				})
+				.catch((err) => console.log(err));
+		}
+	};
 
 	//GET EVENTS SUBSCRIBED
 	useEffect(() => {
@@ -284,9 +305,11 @@ const EventsPage = () => {
 				</Grid>
 
 				{/* SUBSCRIBED TO */}
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
-						{eventsSubscribed ? (
+				{eventsSubscribed === null || eventsSubscribed.length < 1 ? (
+					<></>
+				) : (
+					<Grid item container className={classes.gridContainer} xs={12}>
+						<Grid container className={classes.container}>
 							<>
 								<Grid item xs={12}>
 									<Typography className={classes.sectionTitle}>
@@ -350,20 +373,32 @@ const EventsPage = () => {
 									<div className={classes.divider}></div>
 								</Grid>
 							</>
-						) : null}
+						</Grid>
 					</Grid>
-				</Grid>
+				)}
 
 				<Grid item container className={classes.gridContainer} xs={12}>
 					<Grid container className={classes.container}>
-						<Grid item xs={12}>
+						<Grid
+							item
+							container
+							justify='space-between'
+							alignItems='center'
+							xs={12}
+						>
 							<Typography className={classes.sectionTitle}>
 								Latest Events{" "}
 							</Typography>
+							<form onSubmit={(e) => handleSearchSubmit(e)}>
+								<TextField
+									onChange={(e) => setEventSearch(e.target.value)}
+									placeholder='Search Events...'
+								></TextField>
+							</form>
 						</Grid>
 						<Grid item container justify='flex-start'>
 							{eventData ? (
-								events.map((item) => {
+								eventData.map((item) => {
 									return (
 										<Grid item className={classes.cardContainer} xs={3}>
 											<Card className={classes.card}>

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import NavBar from "../navbar";
 
 import {
@@ -11,6 +11,7 @@ import {
 	CardActionArea,
 	Avatar,
 	Fab,
+	TextField,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +21,8 @@ import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../../utils/paretaClient";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import articleContext from "../contexts/articleContext";
 
 const useStyles = makeStyles((theme) => ({
 	divider: {
@@ -144,10 +147,19 @@ const useStyles = makeStyles((theme) => ({
 
 const AllPosts = () => {
 	const classes = useStyles();
-	const [articles, setArticles] = useState(null);
-	const [favorite, setFavorite] = useState(null);
-	const [created, setCreated] = useState(null);
-
+	// const [articles, setArticles] = useState(null);
+	// const [favorite, setFavorite] = useState(null);
+	// const [created, setCreated] = useState(null);
+	const {
+		articles,
+		articleSearch,
+		setArticles,
+		setArticleSearch,
+		articlesFavorite,
+		setArticlesFavorite,
+		articlesCreated,
+		setArticlesCreated,
+	} = useContext(articleContext);
 	//Get Favorite Articles
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
@@ -156,12 +168,28 @@ const AllPosts = () => {
 			paretaClient
 				.get(`dashboard/posts/favorite`)
 				.then((res) => {
-					setFavorite(res.data.articles_favorite);
+					setArticlesFavorite(res.data.articles_favorite);
 					console.log(res.data.articles_favorite);
 				})
 				.catch((err) => console.log(err));
 		}
 	}, []);
+
+	//SEARCH ARTICLES
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		console.log("works");
+		const token = Cookies.get("parent-token");
+		if (token) {
+			refresh();
+			paretaClient
+				.post(`articles/search`, { query: articleSearch })
+				.then((res) => {
+					setArticles(res.data);
+				})
+				.catch((err) => console.log(err));
+		}
+	};
 
 	//Get Latest Articles
 	useEffect(() => {
@@ -185,7 +213,8 @@ const AllPosts = () => {
 			paretaClient
 				.get(`dashboard/posts`)
 				.then((res) => {
-					setCreated(res.data.articles_created);
+					setArticlesCreated(res.data.articles_created);
+					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -198,7 +227,7 @@ const AllPosts = () => {
 				{/* CREATED Articlees */}
 				<Grid item container className={classes.gridContainer} xs={12}>
 					<Grid container className={classes.container}>
-						{created ? (
+						{articlesCreated ? (
 							<>
 								<Grid item xs={12}>
 									<Typography className={classes.sectionTitle}>
@@ -206,7 +235,7 @@ const AllPosts = () => {
 									</Typography>
 								</Grid>
 								<Grid container justify='flex-start'>
-									{created.map((item) => {
+									{articlesCreated.map((item) => {
 										return (
 											<>
 												<Grid
@@ -265,9 +294,11 @@ const AllPosts = () => {
 				</Grid>
 
 				{/* FAVORITED */}
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
-						{favorite ? (
+				{articlesFavorite === null || articlesFavorite.length < 1 ? (
+					<></>
+				) : (
+					<Grid item container className={classes.gridContainer} xs={12}>
+						<Grid container className={classes.container}>
 							<>
 								<Grid item xs={12}>
 									<Typography className={classes.sectionTitle}>
@@ -275,7 +306,7 @@ const AllPosts = () => {
 									</Typography>
 								</Grid>
 								<Grid container justify='flex-start'>
-									{favorite.map((item) => {
+									{articlesFavorite.map((item) => {
 										return (
 											<>
 												<Grid
@@ -320,17 +351,26 @@ const AllPosts = () => {
 									<div className={classes.divider}></div>
 								</Grid>
 							</>
-						) : null}
+						</Grid>
 					</Grid>
-				</Grid>
+				)}
+
 				<Grid item container className={classes.gridContainer} xs={12}>
 					<Grid container className={classes.container}>
 						{articles ? (
 							<>
 								<Grid item xs={12}>
-									<Typography className={classes.sectionTitle}>
-										Latest Experiences{" "}
-									</Typography>
+									<Grid container justify='space-between' alignItems='center'>
+										<Typography className={classes.sectionTitle}>
+											Latest Experiences{" "}
+										</Typography>
+										<form onSubmit={(e) => handleSearchSubmit(e)}>
+											<TextField
+												onChange={(e) => setArticleSearch(e.target.value)}
+												placeholder='Search Experience...'
+											></TextField>
+										</form>
+									</Grid>
 								</Grid>
 								<Grid container justify='flex-start'>
 									{articles.map((item) => {

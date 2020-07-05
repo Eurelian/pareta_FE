@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import { Grid, Typography, TextField } from "@material-ui/core/";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import NavBar from "./navbar";
@@ -6,7 +6,8 @@ import { Editor } from "@tinymce/tinymce-react";
 import ButtonLight from "./ui/ButtonLight";
 import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../utils/paretaClient";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import articleContext from "./contexts/articleContext";
 
 const useStyles = makeStyles((theme) => ({
 	text: {
@@ -39,6 +40,9 @@ const CreateArticle = () => {
 	const classes = useStyles();
 	const [blog, setBlog] = useState({ title: "", text: "" });
 	const [isSubmitted, setIsSubmitted] = useState(false);
+	const history = useHistory();
+
+	const { setArticlesCreated } = useContext(articleContext);
 
 	const handleEditorChange = (e) => {
 		setBlog({ ...blog, text: e.target.getContent() });
@@ -62,7 +66,9 @@ const CreateArticle = () => {
 				.then((res) => {
 					console.log(res);
 					setBlog({ title: "", text: "" });
+					setArticlesCreated(res.data.articles_created);
 					setIsSubmitted(true);
+					history.push("/posts");
 				})
 				.catch((err) => console.log(err));
 		}

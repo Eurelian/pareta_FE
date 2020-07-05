@@ -40,7 +40,10 @@ const App = () => {
 
 	//ARTICLE DATA
 	const [articles, setArticles] = useState(null);
-	// const [articlePreview, setArticlePreview] = useState(null);
+	const [article, setArticle] = useState(null);
+	const [articlesFavorite, setArticlesFavorite] = useState(null);
+	const [articlesCreated, setArticlesCreated] = useState(null);
+	const [articleSearch, setArticleSearch] = useState(null);
 
 	//EVENT DATA Submit
 	const [event, setEvent] = useState({
@@ -56,6 +59,7 @@ const App = () => {
 	const [singleEvent, setSingleEvent] = useState(null);
 	const [eventsCreated, setEventsCreated] = useState(null);
 	const [eventsSubscribed, setEventsSubscribed] = useState(null);
+	const [eventSearch, setEventSearch] = useState(null);
 	const [isSubmitted, setIsSubmitted] = useState(false);
 	const [isCreated, setIsCreated] = useState(false);
 
@@ -66,7 +70,7 @@ const App = () => {
 			refresh();
 			paretaClient
 				.get("/events")
-				.then((res) => setEventData(res))
+				.then((res) => setEventData(res.data))
 				.catch((err) => console.log(err));
 		}
 	}, [isSubmitted]);
@@ -227,111 +231,130 @@ const App = () => {
 						setIsCreated,
 						singleEvent,
 						setSingleEvent,
+						eventSearch,
+						setEventSearch,
+						setEventData,
 					}}
 				>
-					<errorContext.Provider value={{ isError, setIsError }}>
-						<parentContext.Provider value={{ loggedInParent }}>
-							<actionsContext.Provider value={{ parentLogout }}>
-								<Switch>
-									{/* Create Event */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										parentLogout={parentLogout}
-										component={CreateEvent}
-										path='/new-event'
-									></ProtectedRoute>
+					<articleContext.Provider
+						value={{
+							articles,
+							article,
+							setArticles,
+							setArticle,
+							errorMessage,
+							setArticlesFavorite,
+							articlesFavorite,
+							articlesCreated,
+							setArticlesCreated,
+							articleSearch,
+							setArticleSearch,
+						}}
+					>
+						<errorContext.Provider value={{ isError, setIsError }}>
+							<parentContext.Provider value={{ loggedInParent }}>
+								<actionsContext.Provider value={{ parentLogout }}>
+									<Switch>
+										{/* Create Event */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											parentLogout={parentLogout}
+											component={CreateEvent}
+											path='/new-event'
+										></ProtectedRoute>
 
-									{/* Create Article */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										parentLogout={parentLogout}
-										component={CreateArticle}
-										path='/new-article'
-									></ProtectedRoute>
+										{/* Create Article */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											parentLogout={parentLogout}
+											component={CreateArticle}
+											path='/new-article'
+										></ProtectedRoute>
 
-									{/* Read One Article */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/posts/:id'
-										component={ArticlePage}
-									></ProtectedRoute>
+										{/* Read One Article */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/posts/:id'
+											component={ArticlePage}
+										></ProtectedRoute>
 
-									{/* Render parent you want to chat with */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/parents/:id'
-										component={ParentChat}
-									></ProtectedRoute>
+										{/* Render parent you want to chat with */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/parents/:id'
+											component={ParentChat}
+										></ProtectedRoute>
 
-									{/* Parent Chat Room */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/parents/'
-										component={ParentChat}
-									></ProtectedRoute>
-									<Route path='/parents'></Route>
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/events/:id'
-										component={EventDetails}
-									></ProtectedRoute>
+										{/* Parent Chat Room */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/parents/'
+											component={ParentChat}
+										></ProtectedRoute>
+										<Route path='/parents'></Route>
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/events/:id'
+											component={EventDetails}
+										></ProtectedRoute>
 
-									{/* Get All Articles */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/posts/'
-										component={AllPosts}
-									></ProtectedRoute>
+										{/* Get All Articles */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/posts/'
+											component={AllPosts}
+										></ProtectedRoute>
 
-									{/* Get All Events */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/events'
-										component={EventsPage}
-									></ProtectedRoute>
+										{/* Get All Events */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/events'
+											component={EventsPage}
+										></ProtectedRoute>
 
-									{/* Get Dashboard Data */}
-									<ProtectedRoute
-										isLoggedIn={isLoggedIn}
-										path='/dashboard'
-										loggedInParent={loggedInParent}
-										parentLogout={parentLogout}
-										component={Dashboard}
-									></ProtectedRoute>
+										{/* Get Dashboard Data */}
+										<ProtectedRoute
+											isLoggedIn={isLoggedIn}
+											path='/dashboard'
+											loggedInParent={loggedInParent}
+											parentLogout={parentLogout}
+											component={Dashboard}
+										></ProtectedRoute>
 
-									{/* Register */}
-									<Route
-										path='/signup'
-										render={(props) => (
-											<SignUp
-												{...props}
-												handleSignUp={handleSignUp}
-												handleSignUpSubmit={handleSignUpSubmit}
-											/>
-										)}
-									/>
-
-									<Route
-										exact
-										path='/'
-										render={() =>
-											isLoggedIn ? (
-												<Redirect to='/dashboard' />
-											) : (
-												<Login
-													handleLoginData={handleLoginData}
-													handleLoginSubmit={handleLoginSubmit}
-													errorMessage={errorMessage}
-													loginData={login}
+										{/* Register */}
+										<Route
+											path='/signup'
+											render={(props) => (
+												<SignUp
+													{...props}
+													handleSignUp={handleSignUp}
+													handleSignUpSubmit={handleSignUpSubmit}
 												/>
-											)
-										}
-									></Route>
-									<Route component={PageNotFound}></Route>
-								</Switch>
-							</actionsContext.Provider>
-						</parentContext.Provider>
-					</errorContext.Provider>
+											)}
+										/>
+
+										<Route
+											exact
+											path='/'
+											render={() =>
+												isLoggedIn ? (
+													<Redirect to='/dashboard' />
+												) : (
+													<Login
+														handleLoginData={handleLoginData}
+														handleLoginSubmit={handleLoginSubmit}
+														errorMessage={errorMessage}
+														loginData={login}
+													/>
+												)
+											}
+										></Route>
+										<Route component={PageNotFound}></Route>
+									</Switch>
+								</actionsContext.Provider>
+							</parentContext.Provider>
+						</errorContext.Provider>
+					</articleContext.Provider>
 				</eventContext.Provider>
 			</ThemeProvider>
 		</Fragment>
