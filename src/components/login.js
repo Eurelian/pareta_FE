@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useCallback } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
@@ -170,8 +170,8 @@ const Login = ({
 	const { errorMessage, setErrorMessage } = useContext(eventContext);
 	const { isError, setIsError } = useContext(errorContext);
 
-	const notify = () =>
-		toast.error(`🙊 ${errorMessage}`, {
+	const notify = useCallback(() => {
+		toast.error(`🙊${errorMessage}`, {
 			position: "top-center",
 			autoClose: 5000,
 			hideProgressBar: false,
@@ -180,24 +180,15 @@ const Login = ({
 			draggable: true,
 			progress: undefined,
 		});
+	}, [errorMessage]);
 
 	useEffect(() => {
-		// const notify = () =>
-		// 	toast.error(`🙊 ${errorMessage}`, {
-		// 		position: "top-center",
-		// 		autoClose: 5000,
-		// 		hideProgressBar: false,
-		// 		closeOnClick: true,
-		// 		pauseOnHover: true,
-		// 		draggable: true,
-		// 		progress: undefined,
-		// 	});
 		if (errorMessage) {
 			setIsError(true);
-			// notify();
+			notify(errorMessage);
 		}
 		setErrorMessage("");
-	}, [errorMessage, setErrorMessage, setIsError]);
+	}, [errorMessage, notify, setErrorMessage, setIsError]);
 	return (
 		<Fragment>
 			<div style={{ width: "100%", height: "100vh" }}>

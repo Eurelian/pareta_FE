@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useCallback } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import NavBar from "./navbar";
 import { Grid, TextField, Typography } from "@material-ui/core";
@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import Footer from "./footer";
 
 //Toastify
-import { ToastContainer } from "react-toastify"; //toast
+import { ToastContainer, toast } from "react-toastify"; //toast
 import "react-toastify/dist/ReactToastify.css";
 
 //Context
@@ -105,7 +105,6 @@ const useStyles = makeStyles((theme) => ({
 
 //Selector Controls
 const ageArray = [...Array(12).keys()];
-console.log(ageArray);
 
 const CreateEvent = () => {
 	const classes = useStyles();
@@ -148,31 +147,33 @@ const CreateEvent = () => {
 		setEvent({ ...event, event_date: date });
 	};
 
+	const notify = useCallback(() => {
+		toast.error(`🙊${errorMessage}`, {
+			position: "top-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+	}, [errorMessage]);
+
 	// const notify = () =>
-	// 	toast.error(`🙊${errorMessage}`, {
-	// 		position: "top-center",
-	// 		autoClose: 5000,
-	// 		hideProgressBar: false,
-	// 		closeOnClick: true,
-	// 		pauseOnHover: true,
-	// 		draggable: true,
-	// 		progress: undefined,
-	// 	});
+	// 	// 	toast.error(`🙊 ${errorMessage}`, {
+	// 	// 		position: "top-center",
+	// 	// 		autoClose: 5000,
+	// 	// 		hideProgressBar: false,
+	// 	// 		closeOnClick: true,
+	// 	// 		pauseOnHover: true,
+	// 	// 		draggable: true,
+	// 	// 		progress: undefined,
+	// 	// 	});
 
 	useEffect(() => {
-		// const notify = () =>
-		// 	toast.error(`🙊 ${errorMessage}`, {
-		// 		position: "top-center",
-		// 		autoClose: 5000,
-		// 		hideProgressBar: false,
-		// 		closeOnClick: true,
-		// 		pauseOnHover: true,
-		// 		draggable: true,
-		// 		progress: undefined,
-		// 	});
-		// if (errorMessage) notify();
+		if (errorMessage) notify(errorMessage);
 		setErrorMessage("");
-	}, [setErrorMessage, errorMessage]);
+	}, [setErrorMessage, notify, errorMessage]);
 
 	const CHARACTER_LIMIT_MAX = 255;
 
