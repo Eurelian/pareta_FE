@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useState, useContext } from "react";
-import NavBar from "../navbar";
+import React, { Fragment, useEffect, useContext } from "react";
 
+//PACKAGES
 import {
-	Box,
 	Grid,
 	Typography,
 	Card,
@@ -13,7 +12,6 @@ import {
 	Fab,
 	TextField,
 } from "@material-ui/core";
-import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import event from "../../img/neigbourhood.svg";
@@ -22,8 +20,15 @@ import { paretaClient, refresh } from "../../utils/paretaClient";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+//COMPONENTS
+import NavBar from "../navbar";
+import Footer from "../footer";
+import SkeletonCard from "../ui/SkeletonCard";
+
+//CONTEXTS
 import articleContext from "../contexts/articleContext";
 
+//MUI STYLES
 const useStyles = makeStyles((theme) => ({
 	divider: {
 		margin: "0 auto",
@@ -147,9 +152,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AllPosts = () => {
 	const classes = useStyles();
-	// const [articles, setArticles] = useState(null);
-	// const [favorite, setFavorite] = useState(null);
-	// const [created, setCreated] = useState(null);
+
 	const {
 		articles,
 		articleSearch,
@@ -159,7 +162,11 @@ const AllPosts = () => {
 		setArticlesFavorite,
 		articlesCreated,
 		setArticlesCreated,
+		isResult,
+		setIsResult,
+		randomAvatars,
 	} = useContext(articleContext);
+
 	//Get Favorite Articles
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
@@ -185,6 +192,11 @@ const AllPosts = () => {
 			paretaClient
 				.post(`articles/search`, { query: articleSearch })
 				.then((res) => {
+					if (res.data.length < 1) {
+						console.log(isResult);
+						return setIsResult(false);
+					}
+					setIsResult(true);
 					setArticles(res.data);
 				})
 				.catch((err) => console.log(err));
@@ -224,203 +236,235 @@ const AllPosts = () => {
 		<Fragment>
 			<NavBar></NavBar>
 			<Grid container direction='column'>
-				{/* CREATED Articlees */}
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
-						{articlesCreated ? (
-							<>
-								<Grid item xs={12}>
-									<Typography className={classes.sectionTitle}>
-										Experiences You Shared{" "}
-									</Typography>
-								</Grid>
-								<Grid container justify='flex-start'>
-									{articlesCreated.map((item) => {
-										return (
-											<>
-												<Grid
-													key={item._id}
-													item
-													className={classes.cardContainer}
-													xs={3}
-												>
-													<Card className={classes.card}>
-														<CardActionArea
-															className={classes.cardAction}
-															component={Link}
-															to={`/posts/${item._id}`}
-														>
-															<CardMedia
-																className={classes.cardImage}
-																image={event}
-															></CardMedia>
-															<CardContent className={classes.cardContent}>
-																<Typography className={classes.cardTitle}>
-																	{item.title}
-																</Typography>
-															</CardContent>
-														</CardActionArea>
-													</Card>
-												</Grid>
-											</>
-										);
-									})}
-									<Grid
-										item
-										className={classes.cardContainer}
-										container
-										alignItems='center'
-										xs={3}
-									>
-										<Fab
-											className={classes.addbtn}
-											component={Link}
-											to='/new-article'
-										>
-											<FontAwesomeIcon
-												className={classes.addIcon}
-												icon={faPenSquare}
-												size='3x'
-											></FontAwesomeIcon>
-										</Fab>
-									</Grid>
-								</Grid>
-								<Grid item xs={12}>
-									<div className={classes.divider}></div>
-								</Grid>
-							</>
-						) : null}
-					</Grid>
-				</Grid>
-
-				{/* FAVORITED */}
-				{articlesFavorite === null || articlesFavorite.length < 1 ? (
-					<></>
-				) : (
-					<Grid item container className={classes.gridContainer} xs={12}>
-						<Grid container className={classes.container}>
-							<>
-								<Grid item xs={12}>
-									<Typography className={classes.sectionTitle}>
-										Experiences You Liked{" "}
-									</Typography>
-								</Grid>
-								<Grid container justify='flex-start'>
-									{articlesFavorite.map((item) => {
-										return (
-											<>
-												<Grid
-													key={item._id}
-													item
-													className={classes.cardContainer}
-													xs={3}
-												>
-													<Card className={classes.card}>
-														<CardActionArea
-															className={classes.cardAction}
-															component={Link}
-															to={`/posts/${item._id}`}
-														>
-															<CardMedia
-																className={classes.cardImage}
-																image={event}
-															></CardMedia>
-															<CardContent className={classes.cardContent}>
-																<Typography className={classes.cardTitle}>
-																	{item.title}
-																</Typography>
-																<Grid
-																	container
-																	alignItems='center'
-																	className={classes.authorInfo}
-																>
-																	<Avatar></Avatar>
-																	<Typography className={classes.authorName}>
-																		{item.author.name}
-																	</Typography>
-																</Grid>
-															</CardContent>
-														</CardActionArea>
-													</Card>
-												</Grid>
-											</>
-										);
-									})}
-								</Grid>
-								<Grid item xs={12}>
-									<div className={classes.divider}></div>
-								</Grid>
-							</>
+				{articles === null || articles.length < 1 ? (
+					<>
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								<SkeletonCard />
+							</Grid>
 						</Grid>
-					</Grid>
-				)}
-
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
-						{articles ? (
-							<>
-								<Grid item xs={12}>
-									<Grid container justify='space-between' alignItems='center'>
-										<Typography className={classes.sectionTitle}>
-											Latest Experiences{" "}
-										</Typography>
-										<form onSubmit={(e) => handleSearchSubmit(e)}>
-											<TextField
-												onChange={(e) => setArticleSearch(e.target.value)}
-												placeholder='Search Experience...'
-											></TextField>
-										</form>
-									</Grid>
-								</Grid>
-								<Grid container justify='flex-start'>
-									{articles.map((item) => {
-										return (
-											<>
-												<Grid
-													key={item._id}
-													item
-													className={classes.cardContainer}
-													xs={3}
-												>
-													<Card className={classes.card}>
-														<CardActionArea
-															className={classes.cardAction}
-															component={Link}
-															to={`/posts/${item._id}`}
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								<SkeletonCard />
+							</Grid>
+						</Grid>
+					</>
+				) : (
+					<>
+						{/* CREATED Articlees */}
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								{articlesCreated ? (
+									<>
+										<Grid item xs={12}>
+											<Typography className={classes.sectionTitle}>
+												Experiences You Shared{" "}
+											</Typography>
+										</Grid>
+										<Grid container justify='flex-start'>
+											{articlesCreated.map((item) => {
+												return (
+													<>
+														<Grid
+															key={item._id}
+															item
+															className={classes.cardContainer}
+															xs={3}
 														>
-															<CardMedia
-																className={classes.cardImage}
-																image={event}
-															></CardMedia>
-															<CardContent className={classes.cardContent}>
-																<Typography className={classes.cardTitle}>
-																	{item.title}
-																</Typography>
-																<Grid
-																	container
-																	alignItems='center'
-																	className={classes.authorInfo}
+															<Card className={classes.card}>
+																<CardActionArea
+																	className={classes.cardAction}
+																	component={Link}
+																	to={`/posts/${item._id}`}
 																>
-																	<Avatar></Avatar>
-																	<Typography className={classes.authorName}>
-																		{item.author.name}
-																	</Typography>
-																</Grid>
-															</CardContent>
-														</CardActionArea>
-													</Card>
-												</Grid>
-											</>
-										);
-									})}
+																	<CardMedia
+																		className={classes.cardImage}
+																		image={event}
+																	></CardMedia>
+																	<CardContent className={classes.cardContent}>
+																		<Typography className={classes.cardTitle}>
+																			{item.title}
+																		</Typography>
+																	</CardContent>
+																</CardActionArea>
+															</Card>
+														</Grid>
+													</>
+												);
+											})}
+											<Grid
+												item
+												className={classes.cardContainer}
+												container
+												alignItems='center'
+												xs={3}
+											>
+												<Fab
+													className={classes.addbtn}
+													component={Link}
+													to='/new-article'
+												>
+													<FontAwesomeIcon
+														className={classes.addIcon}
+														icon={faPenSquare}
+														size='3x'
+													></FontAwesomeIcon>
+												</Fab>
+											</Grid>
+										</Grid>
+										<Grid item xs={12}>
+											<div className={classes.divider}></div>
+										</Grid>
+									</>
+								) : null}
+							</Grid>
+						</Grid>
+
+						{/* FAVORITED */}
+						{articlesFavorite === null || articlesFavorite.length < 1 ? null : (
+							<Grid item container className={classes.gridContainer} xs={12}>
+								<Grid container className={classes.container}>
+									<>
+										<Grid item xs={12}>
+											<Typography className={classes.sectionTitle}>
+												Experiences You Liked{" "}
+											</Typography>
+										</Grid>
+										<Grid container justify='flex-start'>
+											{articlesFavorite.map((item) => {
+												return (
+													<>
+														<Grid
+															key={item._id}
+															item
+															className={classes.cardContainer}
+															xs={3}
+														>
+															<Card className={classes.card}>
+																<CardActionArea
+																	className={classes.cardAction}
+																	component={Link}
+																	to={`/posts/${item._id}`}
+																>
+																	<CardMedia
+																		className={classes.cardImage}
+																		image={event}
+																	></CardMedia>
+																	<CardContent className={classes.cardContent}>
+																		<Typography className={classes.cardTitle}>
+																			{item.title}
+																		</Typography>
+																		<Grid
+																			container
+																			alignItems='center'
+																			className={classes.authorInfo}
+																		>
+																			<Avatar></Avatar>
+																			<Typography
+																				className={classes.authorName}
+																			>
+																				{item.author.name}
+																			</Typography>
+																		</Grid>
+																	</CardContent>
+																</CardActionArea>
+															</Card>
+														</Grid>
+													</>
+												);
+											})}
+										</Grid>
+										<Grid item xs={12}>
+											<div className={classes.divider}></div>
+										</Grid>
+									</>
 								</Grid>
-								<Grid item xs={12}>
-									<div className={classes.divider}></div>
-								</Grid>
-							</>
-						) : null}
-					</Grid>
-				</Grid>
+							</Grid>
+						)}
+
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								{!isResult ? (
+									<div>No Articles Found</div>
+								) : isResult && articles ? (
+									<>
+										<Grid item xs={12}>
+											<Grid
+												container
+												justify='space-between'
+												alignItems='center'
+											>
+												<Typography className={classes.sectionTitle}>
+													Latest Experiences{" "}
+												</Typography>
+												<form onSubmit={(e) => handleSearchSubmit(e)}>
+													<TextField
+														onChange={(e) => setArticleSearch(e.target.value)}
+														placeholder='Search Experience...'
+													></TextField>
+												</form>
+											</Grid>
+										</Grid>
+										<Grid container justify='flex-start'>
+											{articles.map((item) => {
+												return (
+													<>
+														<Grid
+															key={item._id}
+															item
+															className={classes.cardContainer}
+															xs={3}
+														>
+															<Card className={classes.card}>
+																<CardActionArea
+																	className={classes.cardAction}
+																	component={Link}
+																	to={`/posts/${item._id}`}
+																>
+																	<CardMedia
+																		className={classes.cardImage}
+																		image={event}
+																	></CardMedia>
+																	<CardContent className={classes.cardContent}>
+																		<Typography className={classes.cardTitle}>
+																			{item.title}
+																		</Typography>
+																		<Grid
+																			container
+																			alignItems='center'
+																			className={classes.authorInfo}
+																		>
+																			<Avatar
+																				src={
+																					randomAvatars[
+																						Math.floor(Math.random() * 49) + 1
+																					].picture.thumbnail
+																				}
+																			></Avatar>
+																			<Typography
+																				className={classes.authorName}
+																			>
+																				{item.author.name}
+																			</Typography>
+																		</Grid>
+																	</CardContent>
+																</CardActionArea>
+															</Card>
+														</Grid>
+													</>
+												);
+											})}
+										</Grid>
+										<Grid item xs={12}>
+											<div className={classes.divider}></div>
+										</Grid>
+									</>
+								) : null}
+							</Grid>
+						</Grid>
+						<Footer></Footer>
+					</>
+				)}
 			</Grid>
 		</Fragment>
 	);

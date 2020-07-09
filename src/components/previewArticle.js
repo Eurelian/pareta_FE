@@ -1,6 +1,7 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+
+//PACKAGES
 import {
-	Box,
 	Grid,
 	Typography,
 	Card,
@@ -12,15 +13,22 @@ import {
 } from "@material-ui/core";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+
+//ASSETS
 import event from "../img/neigbourhood.svg";
-import { DateTime } from "luxon";
+
+//CONTEXTS
+import parentContext from "./contexts/parentContext.js";
+
+//UTILS
 import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../utils/paretaClient";
-import parse from "html-react-parser";
 
+import SkeletonCard from "../components/ui/SkeletonCard";
+
+//MUI STYLES
 const useStyles = makeStyles((theme) => ({
 	divider: {
 		margin: "0 auto",
@@ -32,13 +40,9 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: "1px 1px 5px 1px rgba(0,0,0,0.1)",
 	},
 
-	sectionTitle: { fontSize: "2rem", fontFamily: "Montserrat" },
-
-	gridContainer: { padding: "0 20px" },
-
 	card: {
 		width: "100%",
-		minWidth: "250px",
+		minWidth: "300px",
 		background: "#F9F2FF",
 		borderRadius: "15px",
 		transition: "all 0.4s ease",
@@ -51,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
 
 	addIcon: { color: "#DFACEC", transition: "all 0.3s ease" },
 
-	container: {
-		width: "100%",
+	containerMain: {
+		padding: "50px",
+	},
+
+	containerSecond: {
 		maxWidth: "1270px",
-		height: "auto",
-		display: "flex",
-		margin: "0 auto",
 	},
 	sectionTitle: {
 		fontSize: "2rem",
@@ -67,8 +71,6 @@ const useStyles = makeStyles((theme) => ({
 
 	cardContainer: {
 		maxWidth: "300px",
-		minWidth: "250px",
-
 		margin: "5px 5px",
 		width: "100%",
 		marginBottom: "15px",
@@ -99,8 +101,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 
 	avatar: { width: 35, height: 35 },
-	AvatarGroup: {
+	aGroup: {
 		marginTop: "15px",
+		position: "absolute",
+		bottom: "0",
+		marginBottom: "20px",
+	},
+
+	authorName: {
+		fontFamily: "Montserrat",
+		color: "#292929",
+		marginLeft: "15px",
 	},
 	cardAction: {
 		"& .Mui-focusVisible": {
@@ -130,9 +141,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ArticlePreview = () => {
 	const classes = useStyles();
-
 	const [articles, setArticles] = useState(null);
 
+	const { randomAvatars } = useContext(parentContext);
+	//GET ARTICLES
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -149,86 +161,104 @@ const ArticlePreview = () => {
 
 	return (
 		<Fragment>
-			<Grid container direction='column'>
-				<Grid item xs={12}>
-					<div className={classes.divider}></div>
-				</Grid>
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
+			<Grid
+				direction='column'
+				alignItems='center'
+				container
+				justify='center'
+				style={{ marginBottom: "25px" }}
+			>
+				<Grid item xs={12} className={classes.containerMain}>
+					<Grid container justify='center' style={{ maxWidth: "1270px" }}>
 						<Grid item xs={12}>
 							<Typography className={classes.sectionTitle}>
 								Latest Experiences
 							</Typography>
 						</Grid>
-						<Grid container justify='flex-start'>
-							{articles ? (
-								articles.data.map((item) => {
-									return (
-										<Grid
-											item
-											container
-											justify='center'
-											key={item._id}
-											xs={3}
-											className={classes.cardContainer}
-										>
-											<Card className={classes.card}>
-												<CardActionArea
-													className={classes.cardAction}
-													component={Link}
-													to={`/posts/${item._id}`}
-												>
-													<CardMedia
-														className={classes.cardImage}
-														image={event}
-													></CardMedia>
-													<CardContent className={classes.cardContent}>
-														<Typography className={classes.cardTitle}>
-															{item.title}
-														</Typography>
-														<Grid
-															container
-															alignItems='center'
-															style={{ marginTop: "20px" }}
-														>
-															<Grid item xs={3}>
-																<Avatar className={classes.avatar} alt='Remy'>
+						<Grid item xs={12} container>
+							<Grid container justify='center' style={{ margin: "0, auto" }}>
+								{articles ? (
+									articles.data.map((item, i) => {
+										return (
+											<Grid
+												item
+												container
+												justify='center'
+												key={item._id}
+												xs={12}
+												sm={6}
+												md={4}
+												lg={3}
+												className={classes.cardContainer}
+											>
+												<Card className={classes.card}>
+													<CardActionArea
+														className={classes.cardAction}
+														component={Link}
+														to={`/posts/${item._id}`}
+													>
+														<CardMedia
+															className={classes.cardImage}
+															image={event}
+														></CardMedia>
+														<CardContent className={classes.cardContent}>
+															<Typography className={classes.cardTitle}>
+																{item.title}
+															</Typography>
+															<Grid
+																container
+																alignItems='center'
+																className={classes.aGroup}
+															>
+																<Avatar
+																	className={classes.avatar}
+																	src={
+																		randomAvatars[
+																			Math.floor(Math.random() * 49) + 1
+																		].picture.thumbnail
+																	}
+																>
 																	{item.author.name.slice(0, 1).toUpperCase()}
 																</Avatar>
-															</Grid>
-															<Grid item xs={9}>
-																<Typography>{item.author.name}</Typography>
-															</Grid>
-														</Grid>
-													</CardContent>
-												</CardActionArea>
-											</Card>
-										</Grid>
-									);
-								})
-							) : (
-								<div>Loading</div>
-							)}
 
-							{/* Add New Article Card */}
-							<Grid
-								item
-								className={classes.cardContainer}
-								container
-								alignItems='center'
-								xs={3}
-							>
-								<Fab
-									className={classes.addbtn}
-									component={Link}
-									to='/new-article'
+																<Typography className={classes.authorName}>
+																	{item.author.name}
+																</Typography>
+															</Grid>
+														</CardContent>
+													</CardActionArea>
+												</Card>
+											</Grid>
+										);
+									})
+								) : (
+									<SkeletonCard />
+								)}
+
+								{/* Add New Article Card */}
+								<Grid
+									item
+									className={classes.cardContainer}
+									style={{ minHeight: "150px" }}
+									container
+									alignItems='center'
+									xs={12}
+									sm={6}
+									md={4}
+									lg={3}
 								>
-									<FontAwesomeIcon
-										className={classes.addIcon}
-										icon={faPenSquare}
-										size='3x'
-									></FontAwesomeIcon>
-								</Fab>
+									<Fab
+										className={classes.addbtn}
+										component={Link}
+										to='/new-article'
+									>
+										<FontAwesomeIcon
+											className={classes.addIcon}
+											icon={faPenSquare}
+											size='3x'
+										></FontAwesomeIcon>
+									</Fab>
+								</Grid>
 							</Grid>
 						</Grid>
 					</Grid>

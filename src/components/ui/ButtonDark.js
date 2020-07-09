@@ -25,7 +25,7 @@ const MyDarkButton = withStyles((theme) => ({
 	},
 }))(Button);
 
-const ButtonDark = ({ text }) => {
+const ButtonDark = ({ text, isDisabled }) => {
 	return <MyDarkButton>{text}</MyDarkButton>;
 };
 

@@ -1,7 +1,9 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 
 //COMPONENTS
 import NavBar from "./navbar";
+import Footer from "./footer";
+import NearMeMap from "../utils/nearmeMap";
 
 //UTILS
 import { handleDate } from "../utils/dateConversion";
@@ -10,7 +12,6 @@ import { paretaClient, refresh } from "../utils/paretaClient";
 
 //PACKAGES
 import {
-	Box,
 	Grid,
 	Typography,
 	Card,
@@ -21,17 +22,21 @@ import {
 	Fab,
 	TextField,
 } from "@material-ui/core";
-import AvatarGroup from "@material-ui/lab/AvatarGroup";
+import Pagination from "@material-ui/lab/Pagination";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FadeIn from "react-fade-in";
 
 //ASSETS
 import event from "../img/neigbourhood.svg";
 
+//utils
+import SkeletonCard from "../components/ui/SkeletonCard";
+
 //Contexts
-import parentContext from "./contexts/parentContext";
+
 import eventContext from "./contexts/eventContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -66,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: "5px 5px",
 		width: "100%",
 		marginBottom: "15px",
+		transition: "all 0.4s ease",
 	},
 
 	card: {
@@ -144,6 +150,8 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 
+	eventCardContainer: {},
+
 	cardAction: {
 		"& .Mui-focusVisible": {
 			display: "none",
@@ -163,6 +171,8 @@ const useStyles = makeStyles((theme) => ({
 const EventsPage = () => {
 	const classes = useStyles();
 
+	const [page, setPage] = useState(1);
+
 	const {
 		eventData,
 		setEventData,
@@ -173,7 +183,21 @@ const EventsPage = () => {
 		setEventsSubscribed,
 		eventSearch,
 		setEventSearch,
+		isResult,
+		setIsResult,
+		randomAvatars,
 	} = useContext(eventContext);
+
+	//SET PAGINATION
+	const handleChangePage = (e, value) => {
+		setPage(value);
+	};
+
+	const handleSlice = (events) => {
+		const start = page === 1 ? 0 : (page - 1) * 8;
+		const end = page * 8;
+		return events.slice(start, end);
+	};
 
 	//Get Created Events
 	useEffect(() => {
@@ -201,8 +225,12 @@ const EventsPage = () => {
 			paretaClient
 				.post(`/events/search`, { query: eventSearch })
 				.then((res) => {
+					if (res.data.length < 1) {
+						console.log(isResult);
+						return setIsResult(false);
+					}
+					setIsResult(true);
 					setEventData(res.data);
-					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -227,227 +255,340 @@ const EventsPage = () => {
 		<Fragment>
 			<NavBar></NavBar>
 			<Grid container direction='column'>
-				{/* CREATED EVENTS */}
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
-						<Grid item xs={12}>
-							<Typography className={classes.sectionTitle}>
-								{eventsCreated == null
-									? `Events you created`
-									: `Create an event`}{" "}
-							</Typography>
-						</Grid>
-						{eventsCreated ? (
-							<>
-								<Grid container justify='flex-start'>
-									{eventsCreated.map((item, i) => {
-										return (
-											<>
-												<Grid
-													key={i++}
-													item
-													className={classes.cardContainer}
-													xs={3}
-												>
-													<Card className={classes.card}>
-														<CardActionArea
-															className={classes.cardAction}
-															component={Link}
-															to={`/events/${item._id}`}
-														>
-															<CardMedia
-																className={classes.cardImage}
-																image={event}
-															></CardMedia>
-															<CardContent className={classes.cardContent}>
-																<Typography className={classes.cardDate}>
-																	{handleDate(item.date)}
-																</Typography>
-																<Typography className={classes.cardTitle}>
-																	{item.name}
-																</Typography>
-																<Typography className={classes.cardSubtext}>
-																	{item.description}
-																</Typography>
-															</CardContent>
-														</CardActionArea>
-													</Card>
-												</Grid>
-											</>
-										);
-									})}
-									<Grid
-										item
-										className={classes.cardContainer}
-										container
-										alignItems='center'
-										xs={3}
-									>
-										<Fab
-											className={classes.addbtn}
-											component={Link}
-											to='/new-event'
-										>
-											<FontAwesomeIcon
-												className={classes.addIcon}
-												icon={faCalendarPlus}
-												size='3x'
-											></FontAwesomeIcon>
-										</Fab>
-									</Grid>
-								</Grid>
-								<Grid item xs={12}>
-									<div className={classes.divider}></div>
-								</Grid>
-							</>
-						) : null}
-					</Grid>
-				</Grid>
+				{eventData !== null || eventData.length > 0 ? (
+					<>
+						{/* CREATED EVENTS */}
 
-				{/* SUBSCRIBED TO */}
-				{eventsSubscribed === null || eventsSubscribed.length < 1 ? (
-					<></>
-				) : (
-					<Grid item container className={classes.gridContainer} xs={12}>
-						<Grid container className={classes.container}>
-							<>
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
 								<Grid item xs={12}>
 									<Typography className={classes.sectionTitle}>
-										Events You are Attending{" "}
+										{eventsCreated === null || eventsCreated.length < 1
+											? `Create an event`
+											: `Events you created`}{" "}
 									</Typography>
 								</Grid>
-								<Grid item container justify='flex-start'>
-									{eventsSubscribed.map((item, i) => {
-										return (
-											<>
-												<Grid
-													key={i++}
-													className={classes.cardContainer}
-													xs={3}
-												>
-													<Card className={classes.card}>
-														<CardActionArea
-															className={classes.cardAction}
-															component={Link}
-															to={`/events/${item._id}`}
-															onClick={() => setIsCreated(false)}
-														>
-															<CardMedia
-																className={classes.cardImage}
-																image={event}
-															></CardMedia>
-															<CardContent className={classes.cardContent}>
-																<Typography className={classes.cardDate}>
-																	{handleDate(item.date)}
-																</Typography>
-																<Typography className={classes.cardTitle}>
-																	{item.name}
-																</Typography>
-																<Typography className={classes.cardSubtext}>
-																	{item.description}
-																</Typography>
-
-																{/* <Grid
-																	container
-																	alignItems='center'
-																	className={classes.aGroup}
-																>
-																	<Avatar>
-																		{item.organizer.name
-																			.slice(0, 1)
-																			.toUpperCase()}
-																	</Avatar>
-																	<Typography className={classes.authorName}>
-																		{item.organizer.name}
-																	</Typography>
-																</Grid> */}
-															</CardContent>
-														</CardActionArea>
-													</Card>
-												</Grid>
-											</>
-										);
-									})}
-								</Grid>
-								<Grid item xs={12}>
-									<div className={classes.divider}></div>
-								</Grid>
-							</>
-						</Grid>
-					</Grid>
-				)}
-
-				<Grid item container className={classes.gridContainer} xs={12}>
-					<Grid container className={classes.container}>
-						<Grid
-							item
-							container
-							justify='space-between'
-							alignItems='center'
-							xs={12}
-						>
-							<Typography className={classes.sectionTitle}>
-								Latest Events{" "}
-							</Typography>
-							<form onSubmit={(e) => handleSearchSubmit(e)}>
-								<TextField
-									onChange={(e) => setEventSearch(e.target.value)}
-									placeholder='Search Events...'
-								></TextField>
-							</form>
-						</Grid>
-						<Grid item container justify='flex-start'>
-							{eventData ? (
-								eventData.map((item) => {
-									return (
-										<Grid item className={classes.cardContainer} xs={3}>
-											<Card className={classes.card}>
-												<CardActionArea
-													className={classes.cardAction}
+								{eventsCreated ? (
+									<>
+										<Grid container justify='flex-start'>
+											{eventsCreated.map((item, i) => {
+												return (
+													<>
+														<FadeIn>
+															<Grid
+																key={i++}
+																item
+																className={classes.cardContainer}
+																xs={3}
+															>
+																<Card className={classes.card}>
+																	<CardActionArea
+																		className={classes.cardAction}
+																		component={Link}
+																		to={`/events/${item._id}`}
+																	>
+																		<CardMedia
+																			className={classes.cardImage}
+																			image={event}
+																		></CardMedia>
+																		<CardContent
+																			className={classes.cardContent}
+																		>
+																			<Typography className={classes.cardDate}>
+																				{handleDate(item.date)}
+																			</Typography>
+																			<Typography className={classes.cardTitle}>
+																				{item.name}
+																			</Typography>
+																			<Typography
+																				className={classes.cardSubtext}
+																			>
+																				{item.description}
+																			</Typography>
+																		</CardContent>
+																	</CardActionArea>
+																</Card>
+															</Grid>
+														</FadeIn>
+													</>
+												);
+											})}
+											<Grid
+												item
+												className={classes.cardContainer}
+												container
+												alignItems='center'
+												xs={3}
+											>
+												<Fab
+													className={classes.addbtn}
 													component={Link}
-													to={`/events/${item._id}`}
+													to='/new-event'
 												>
-													<CardMedia
-														className={classes.cardImage}
-														image={event}
-													></CardMedia>
-													<CardContent className={classes.cardContent}>
-														<Typography className={classes.cardDate}>
-															{handleDate(item.date)}
-														</Typography>
-														<Typography className={classes.cardTitle}>
-															{item.name}
-														</Typography>
-														<Typography className={classes.cardSubtext}>
-															{item.description}
-														</Typography>
-														<Grid
-															container
-															alignItems='center'
-															className={classes.aGroup}
-														>
-															<Avatar>
-																{item.organizer.name.slice(0, 1).toUpperCase()}
-															</Avatar>
-															<Typography className={classes.authorName}>
-																{item.organizer.name}
-															</Typography>
-														</Grid>
-													</CardContent>
-												</CardActionArea>
-											</Card>
+													<FontAwesomeIcon
+														className={classes.addIcon}
+														icon={faCalendarPlus}
+														size='3x'
+													></FontAwesomeIcon>
+												</Fab>
+											</Grid>
 										</Grid>
-									);
-								})
-							) : (
-								<div>Loading...</div>
-							)}
+										<Grid item xs={12}>
+											<div className={classes.divider}></div>
+										</Grid>
+									</>
+								) : (
+									<SkeletonCard></SkeletonCard>
+								)}
+							</Grid>
 						</Grid>
-					</Grid>
-				</Grid>
 
-				{/* end */}
+						{/* SUBSCRIBED TO */}
+						{eventsSubscribed === null || eventsSubscribed.length < 1 ? null : (
+							<Grid item container className={classes.gridContainer} xs={12}>
+								<Grid container className={classes.container}>
+									<>
+										<Grid item xs={12}>
+											<Typography className={classes.sectionTitle}>
+												Events You are Attending{" "}
+											</Typography>
+										</Grid>
+										<Grid item container justify='flex-start'>
+											{eventsSubscribed.map((item, i) => {
+												return (
+													<>
+														<FadeIn>
+															<Grid
+																key={i++}
+																className={classes.cardContainer}
+																xs={3}
+															>
+																<Card className={classes.card}>
+																	<CardActionArea
+																		className={classes.cardAction}
+																		component={Link}
+																		to={`/events/${item._id}`}
+																		onClick={() => setIsCreated(false)}
+																	>
+																		<CardMedia
+																			className={classes.cardImage}
+																			image={event}
+																		></CardMedia>
+																		<CardContent
+																			className={classes.cardContent}
+																		>
+																			<Typography className={classes.cardDate}>
+																				{handleDate(item.date)}
+																			</Typography>
+																			<Typography className={classes.cardTitle}>
+																				{item.name}
+																			</Typography>
+																			<Typography
+																				className={classes.cardSubtext}
+																			>
+																				{item.description}
+																			</Typography>
+
+																			<Grid
+																				container
+																				alignItems='center'
+																				className={classes.aGroup}
+																			>
+																				<Avatar
+																					src={
+																						randomAvatars[
+																							Math.floor(Math.random() * 49) + 1
+																						].picture.thumbnail
+																					}
+																				></Avatar>
+																				<Typography
+																					className={classes.authorName}
+																				>
+																					{item.organizer.name}
+																				</Typography>
+																			</Grid>
+																		</CardContent>
+																	</CardActionArea>
+																</Card>
+															</Grid>
+														</FadeIn>
+													</>
+												);
+											})}
+										</Grid>
+										<Grid item xs={12}>
+											<div className={classes.divider}></div>
+										</Grid>
+									</>
+								</Grid>
+							</Grid>
+						)}
+
+						{/* EVENTS NEAR USER */}
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								<Grid
+									item
+									container
+									justify='space-between'
+									alignItems='center'
+									xs={12}
+								>
+									<Typography className={classes.sectionTitle}>
+										Events Near You{" "}
+									</Typography>
+								</Grid>
+								<Grid
+									item
+									container
+									style={{ maxHeight: "500px", marginBottom: "50px" }}
+								>
+									<NearMeMap></NearMeMap>
+								</Grid>
+							</Grid>
+						</Grid>
+
+						{/* LATEST EVENTS */}
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								<Grid
+									item
+									container
+									justify='space-between'
+									alignItems='center'
+									xs={12}
+								>
+									<Typography className={classes.sectionTitle}>
+										Latest Events{" "}
+									</Typography>
+									<form onSubmit={(e) => handleSearchSubmit(e)}>
+										<TextField
+											onChange={(e) => setEventSearch(e.target.value)}
+											placeholder='Search Events...'
+										></TextField>
+									</form>
+								</Grid>
+								<Grid
+									item
+									container
+									className={classes.eventCardContainer}
+									justify='flex-start'
+								>
+									{!isResult ? (
+										<div
+											style={{
+												display: "flex",
+												height: "400px",
+												width: "100%",
+												alignItems: "center",
+												justifyContent: "center",
+											}}
+										>
+											<div
+												style={{
+													margin: "0 auto",
+													fontFamily: "Montserrat",
+													fontWeight: "bold",
+													opacity: "0.5",
+													fontSize: "2rem",
+												}}
+											>
+												No Events Found
+											</div>
+										</div>
+									) : isResult && eventData ? (
+										handleSlice(eventData).map((item, i) => {
+											return (
+												<FadeIn>
+													<Grid
+														key={i++}
+														item
+														className={classes.cardContainer}
+														xs={3}
+													>
+														<Card className={classes.card}>
+															<CardActionArea
+																className={classes.cardAction}
+																component={Link}
+																to={`/events/${item._id}`}
+															>
+																<CardMedia
+																	className={classes.cardImage}
+																	image={event}
+																></CardMedia>
+																<CardContent className={classes.cardContent}>
+																	<Typography className={classes.cardDate}>
+																		{handleDate(item.date)}
+																	</Typography>
+																	<Typography className={classes.cardTitle}>
+																		{item.name}
+																	</Typography>
+																	<Typography className={classes.cardSubtext}>
+																		{item.description}
+																	</Typography>
+																	<Grid
+																		container
+																		alignItems='center'
+																		className={classes.aGroup}
+																	>
+																		<Avatar
+																			src={
+																				randomAvatars[
+																					Math.floor(Math.random() * 49) + 1
+																				].picture.thumbnail
+																			}
+																		>
+																			{item.organizer.name
+																				.slice(0, 1)
+																				.toUpperCase()}
+																		</Avatar>
+																		<Typography className={classes.authorName}>
+																			{item.organizer.name}
+																		</Typography>
+																	</Grid>
+																</CardContent>
+															</CardActionArea>
+														</Card>
+													</Grid>
+												</FadeIn>
+											);
+										})
+									) : (
+										<SkeletonCard />
+									)}
+								</Grid>
+								<Grid item container justify='center'>
+									{eventData && (
+										<>
+											<Pagination
+												count={Math.ceil(eventData.length / 8)}
+												onChange={handleChangePage}
+												style={{ marginTop: "35px" }}
+											></Pagination>
+										</>
+									)}
+								</Grid>
+							</Grid>
+						</Grid>
+
+						{/* end */}
+					</>
+				) : (
+					<>
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								<SkeletonCard />
+							</Grid>
+						</Grid>
+						<Grid item container className={classes.gridContainer} xs={12}>
+							<Grid container className={classes.container}>
+								<SkeletonCard />
+							</Grid>
+						</Grid>
+					</>
+				)}
 			</Grid>
+			<Footer />
 		</Fragment>
 	);
 };

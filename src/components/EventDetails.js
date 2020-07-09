@@ -1,50 +1,71 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
+
+//COMPONENTS
 import NavBar from "./navbar";
-import { useParams, useHistory } from "react-router-dom";
-import eventContext from "./contexts/eventContext";
-import { Grid, Typography, Avatar, Paper } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import ButtonDark from "./ui/ButtonDark";
 import ButtonLight from "./ui/ButtonLight";
 import ButtonRed from "./ui/ButtonRed";
 import EventMap from "../utils/eventMap";
+import DividerBar from "../components/ui/Divider";
+import DialogAlert from "../components/ui/Dialog";
+import Footer from "./footer";
+import SkeletonPage from "./ui/SkeletonPage";
+import { Link } from "react-router-dom";
 
+//PACKAGES
+import { useParams, useHistory } from "react-router-dom";
+import { Grid, Typography, Avatar, Paper } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
+
+//CONTEXTS
+import eventContext from "./contexts/eventContext";
+
+//UTILS
 import { paretaClient, refresh } from "../utils/paretaClient";
 import Cookies from "js-cookie";
-import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { handleDate } from "../utils/dateConversion";
-import DividerBar from "../components/ui/Divider";
 
-import DialogAlert from "../components/ui/Dialog";
-
+//MUI STYLES
 const useStyles = makeStyles((theme) => ({
 	container: {
-		height: "auto",
-		background: "#F9F2FF",
-		width: "100%",
-		minHeight: "100vh",
-		backgroundSize: "cover",
-		backgroundAttachment: "fixed",
-		backgroundPosition: "center center",
-		backgroundRepeat: "no-repeat",
+		marginBottom: "25px",
+		// [theme.breakpoints.down("sm")]: { marginBottom: "0px" },
+	},
+
+	containerMain: {
+		padding: "50px",
+	},
+
+	containerSecond: {
+		maxWidth: "1270px",
 	},
 	title: {
-		fontSize: "3rem",
+		fontSize: "2.8rem",
 		fontFamily: "Raleway",
 		color: "#f5f5f5",
 		padding: "20px 50px",
+		transition: "all 0.2s ease",
+		[theme.breakpoints.down(1058)]: {
+			padding: "0",
+			margin: "0 20px",
+		},
 	},
 	titleContainer: {
 		background: "#53237D",
 		borderRadius: "20px 0 0 20px",
 		boxShadow: "2px 4px 15px 2px rgba(0,0,0,0.2)",
 		width: "100%",
+		[theme.breakpoints.down(1058)]: {
+			textAlign: "center",
+			borderRadius: "20px",
+		},
 	},
 	subtitle: {
 		fontFamily: "Raleway",
 		color: "#39364f",
 		textAlign: "center",
-		fontSize: "1.1rem",
+		fontSize: "1rem",
 		marginBottom: "5px",
 	},
 	subtext: {
@@ -84,7 +105,14 @@ const useStyles = makeStyles((theme) => ({
 		color: "#6F7287",
 		lineHeight: "1.6",
 	},
-	btnContainer: { maxWidth: "350px", margin: "0 auto" },
+	btnContainer: {
+		maxWidth: "350px",
+		margin: "0 auto",
+		[theme.breakpoints.down(1058)]: {
+			order: 5,
+			marginTop: "50px",
+		},
+	},
 	mapContainer: {
 		// maxWidth: "350px",
 		width: "100%",
@@ -109,20 +137,34 @@ const EventDetails = () => {
 		setEventsSubscribed,
 		setIsCreated,
 		isCreated,
-		eventsSubscribed,
+
 		singleEvent,
 		setSingleEvent,
+		randomAvatars,
 	} = useContext(eventContext);
 
 	const [isSubscribed, setIsSubscribed] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
+	const [isFull, setIsFull] = useState(false);
 
 	const dialogToggle = () => {
 		setIsOpen(!isOpen);
 	};
 
-	//EVENT SINGLE
+	const handleFavorite = () => {
+		const token = Cookies.get("parent-token");
+		if (token) {
+			refresh();
+			paretaClient
+				.post(`/dashboard/favorite-parent`, { id: singleEvent.organizer._id })
+				.then((res) => {
+					history.push("/parents");
+				})
+				.catch((err) => console.log(err));
+		}
+	};
 
+	//EVENT SINGLE GET
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -130,12 +172,15 @@ const EventDetails = () => {
 				.get(`events/${id}`)
 				.then((res) => {
 					setSingleEvent(res.data);
+					if (res.data.attending.length === res.data.size) setIsFull(true);
+					else setIsFull(false);
+					console.log(res.data);
 				})
 				.catch((err) => console.log(err));
 		}
 	}, []);
 
-	//EVENT IS SUBSCRIBED
+	//EVENT IS SUBSCRIBED GET
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -148,7 +193,7 @@ const EventDetails = () => {
 		}
 	}, []);
 
-	//EVENT IS CREATED
+	//EVENT IS CREATED GET
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -161,7 +206,7 @@ const EventDetails = () => {
 		}
 	}, []);
 
-	//EVENT SUBSCRIBE
+	//EVENT SUBSCRIBE POST
 	const handleEventSubscribe = () => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -213,154 +258,191 @@ const EventDetails = () => {
 				handleOpen={dialogToggle}
 				handleDelete={handleEventDelete}
 			></DialogAlert>
-			{console.log(singleEvent)}
-			{singleEvent ? (
-				<Grid container className={classes.container}>
-					<Grid item xs={2}></Grid>
-					<Grid item xs={8}>
-						<Grid
-							container
-							style={{ marginTop: "150px", maxWidth: "1270px", width: "100%" }}
-						>
-							<Paper className={classes.background}>
-								<Grid item xs={12}>
-									<Grid container alignItems='center' wrap='wrap'>
-										<Grid
-											item
-											xs={8}
-											container
-											wrap='wrap'
-											className={classes.titleContainer}
-										>
-											<Typography className={classes.title}>
-												{singleEvent.name}
-											</Typography>
-										</Grid>
-										<Grid
-											item
-											xs={4}
-											container
-											wrap='wrap'
-											className={classes.mapContainer}
-										>
-											<EventMap
-												coord={singleEvent.geometry.coordinates}
-											></EventMap>
-										</Grid>
-									</Grid>
-								</Grid>
-
-								<Grid item xs={12}>
-									<Grid container wrap='wrap'>
-										<Grid item xs={8}>
-											<Grid container>
-												<Grid item xs={12}>
-													<DividerBar></DividerBar>
-												</Grid>
-												<Grid item xs={12}>
-													<Typography className={classes.sectionTitle}>
-														Details
-													</Typography>
-													<Typography className={classes.description}>
-														{singleEvent.description}
-													</Typography>
-												</Grid>
+			<Grid
+				container
+				direction='column'
+				alignItems='center'
+				justify='center'
+				className={classes.container}
+			>
+				<Grid item xs={12} className={classes.containerMain}>
+					<Grid container justify='center' className={classes.containerSecond}>
+						<Paper className={classes.background}>
+							{singleEvent === null || singleEvent.length < 1 ? (
+								<>
+									{" "}
+									<SkeletonPage />
+								</>
+							) : (
+								<>
+									<Grid item xs={12}>
+										<Grid container alignItems='center' wrap='wrap'>
+											<Grid
+												item
+												xs={12}
+												md={8}
+												container
+												wrap='wrap'
+												className={classes.titleContainer}
+											>
+												<Typography className={classes.title}>
+													{singleEvent.name}
+												</Typography>
+											</Grid>
+											<Grid
+												item
+												xs={12}
+												md={4}
+												container
+												wrap='wrap'
+												className={classes.mapContainer}
+											>
+												<EventMap
+													coord={singleEvent.geometry.coordinates}
+												></EventMap>
 											</Grid>
 										</Grid>
-										<Grid item xs={4}>
-											<Grid item xs={12}>
-												<Grid container direction='column' alignItems='center'>
-													{isCreated ? (
-														<Grid item className={classes.btnContainer}>
-															<div onClick={dialogToggle}>
-																<ButtonRed text={"Delete Event"}></ButtonRed>
-															</div>
-														</Grid>
-													) : (
-														<Grid item className={classes.btnContainer}>
-															{isSubscribed ? (
-																<div onClick={() => handleEventUnsubscribe()}>
-																	<ButtonLight
-																		text={"Don't Attend"}
-																	></ButtonLight>
-																</div>
-															) : (
-																<div onClick={() => handleEventSubscribe()}>
-																	<ButtonDark text={"Attend"}></ButtonDark>
-																</div>
-															)}
-														</Grid>
-													)}
+									</Grid>
 
-													<Grid item xs={12} className={classes.section}>
-														<Typography className={classes.date}>
-															{" "}
-															{handleDate(singleEvent.date)}
+									<Grid item xs={12}>
+										<Grid container wrap='wrap'>
+											<Grid item xs={12} md={8}>
+												<Grid container>
+													<Grid item xs={12}>
+														<DividerBar></DividerBar>
+													</Grid>
+													<Grid item xs={12}>
+														<Typography className={classes.sectionTitle}>
+															Details
+														</Typography>
+														<Typography className={classes.description}>
+															{singleEvent.description}
 														</Typography>
 													</Grid>
-													<Grid item xs={12} className={classes.section}>
-														<Typography className={classes.subtitle}>
-															Hosted by
-														</Typography>
-														<Grid container alignItems='center'>
-															<Avatar size='xs'></Avatar>
-															<Typography className={classes.organizer}>
-																{singleEvent.organizer.name}
+												</Grid>
+											</Grid>
+											<Grid item xs={12} md={4}>
+												<Grid item xs={12}>
+													<Grid
+														container
+														direction='column'
+														alignItems='center'
+													>
+														{isCreated ? (
+															<Grid item className={classes.btnContainer}>
+																<div onClick={dialogToggle}>
+																	<ButtonRed text={"Delete Event"}></ButtonRed>
+																</div>
+															</Grid>
+														) : (
+															<Grid item className={classes.btnContainer}>
+																{isSubscribed ? (
+																	<div onClick={() => handleEventUnsubscribe()}>
+																		<ButtonLight
+																			text={"Don't Attend"}
+																		></ButtonLight>
+																	</div>
+																) : (
+																	<div
+																		style={{
+																			display: `${isFull ? "none" : null}`,
+																		}}
+																		onClick={() => handleEventSubscribe()}
+																	>
+																		<ButtonDark text={"Attend"}></ButtonDark>
+																	</div>
+																)}
+															</Grid>
+														)}
+
+														<Grid item xs={12} className={classes.section}>
+															<Typography className={classes.date}>
+																{" "}
+																{handleDate(singleEvent.date)}
+															</Typography>
+														</Grid>
+														<Grid item xs={12} className={classes.section}>
+															<Typography className={classes.subtitle}>
+																Hosted by
+															</Typography>
+															<Grid
+																container
+																alignItems='center'
+																onClick={() => handleFavorite()}
+																component={Link}
+															>
+																<Avatar
+																	size='xs'
+																	src={randomAvatars[0].picture.thumbnail}
+																></Avatar>
+																<Typography className={classes.organizer}>
+																	{singleEvent.organizer.name}
+																</Typography>
+															</Grid>
+														</Grid>
+														<Grid item xs={12} className={classes.section}>
+															<Typography className={classes.subtitle}>
+																Attending
+															</Typography>
+															<AvatarGroup max={3}>
+																{singleEvent.attending &&
+																	singleEvent.attending.map((item, i) => (
+																		<Avatar
+																			key={i++}
+																			src={
+																				randomAvatars[
+																					Math.floor(Math.random() * 49) + 1
+																				].picture.thumbnail
+																			}
+																		>
+																			{item.name.slice(0, 1).toUpperCase()}
+																		</Avatar>
+																	))}
+															</AvatarGroup>
+														</Grid>
+														<Grid item xs={12} className={classes.section}>
+															<Typography className={classes.subtitle}>
+																Children Age Group
+															</Typography>
+															<Typography className={classes.subtext}>
+																{singleEvent.age_group[0].from} -{" "}
+																{singleEvent.age_group[0].to} years
+															</Typography>
+														</Grid>
+														<Grid item xs={12} className={classes.section}>
+															<Typography className={classes.subtitle}>
+																Event Size
+															</Typography>
+															<Typography className={classes.subtext}>
+																{singleEvent.size} spots
+															</Typography>
+														</Grid>
+														<Grid item xs={12} className={classes.section}>
+															<Typography className={classes.subtitle}>
+																Places Left
+															</Typography>
+															<Typography className={classes.subtext}>
+																{singleEvent.size -
+																	singleEvent.attending.length <
+																0
+																	? "Fully Booked"
+																	: singleEvent.size -
+																	  singleEvent.attending.length}{" "}
 															</Typography>
 														</Grid>
 													</Grid>
-													<Grid item xs={12} className={classes.section}>
-														<Typography className={classes.subtitle}>
-															Attending
-														</Typography>
-														<AvatarGroup max={3}>
-															{singleEvent.attending &&
-																singleEvent.attending.map((item, i) => (
-																	<Avatar key={i++}>
-																		{item.name.slice(0, 1).toUpperCase()}
-																	</Avatar>
-																))}
-														</AvatarGroup>
-													</Grid>
-													<Grid item xs={12} className={classes.section}>
-														<Typography className={classes.subtitle}>
-															Children Age Group
-														</Typography>
-														<Typography className={classes.subtext}>
-															{singleEvent.age_group[0].from} -{" "}
-															{singleEvent.age_group[0].to} years
-														</Typography>
-													</Grid>
-													<Grid item xs={12} className={classes.section}>
-														<Typography className={classes.subtitle}>
-															Event Size
-														</Typography>
-														<Typography className={classes.subtext}>
-															{singleEvent.size} spots
-														</Typography>
-													</Grid>
-													<Grid item xs={12} className={classes.section}>
-														<Typography className={classes.subtitle}>
-															Places Left
-														</Typography>
-														<Typography className={classes.subtext}>
-															{singleEvent.size - singleEvent.attending.length}{" "}
-															spots
-														</Typography>
-													</Grid>
 												</Grid>
 											</Grid>
 										</Grid>
 									</Grid>
-								</Grid>
-							</Paper>
-						</Grid>
+								</>
+							)}
+						</Paper>
 					</Grid>
-					<Grid item xs={2}></Grid>
 				</Grid>
-			) : (
-				<div>Loading...</div>
-			)}
+
+				<Footer></Footer>
+			</Grid>
 		</Fragment>
 	);
 };

@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useContext } from "react";
-import { Grid, Typography, TextField } from "@material-ui/core/";
+import { Grid, TextField, Paper } from "@material-ui/core/";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import NavBar from "./navbar";
 import { Editor } from "@tinymce/tinymce-react";
@@ -8,19 +8,31 @@ import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../utils/paretaClient";
 import { Link, useHistory } from "react-router-dom";
 import articleContext from "./contexts/articleContext";
+import Footer from "./footer";
 
 const useStyles = makeStyles((theme) => ({
 	text: {
-		fontSize: "3.5rem",
+		fontSize: "3rem",
+		paddingLeft: "15px",
+		paddingBottom: "15px",
 		fontFamily: "Raleway",
-		color: "black",
+		color: "#39364f",
+	},
+
+	background: {
+		maxWidth: "1270px",
+		width: "100%",
+		padding: "30px 50px",
+		borderRadius: "20px",
+		boxShadow: "2px 2px 20px 2px rgba(0,0,0,0.1)",
+		marginBottom: "150px",
 	},
 }));
 
 const InputTitle = withStyles({
 	root: {
 		width: "100%",
-		marginTop: "15px",
+		marginTop: "30px",
 		"& .MuiInput-underline:after": {
 			borderWidth: "1px",
 		},
@@ -80,57 +92,63 @@ const CreateArticle = () => {
 			<Grid container>
 				<Grid item xs={2}></Grid>
 				<Grid item xs={8} style={{ marginTop: "150px" }}>
-					<Grid container>
-						<Grid item xs={12}>
-							<InputTitle
-								onChange={(e) => handleTitle(e)}
-								InputProps={{ className: classes.text }}
-								placeholder='Title'
-							></InputTitle>
-						</Grid>
-						<Grid item xs={12}>
-							<Editor
-								apiKey='tyhadidpx0uoffabp2p22ez2jfxaxbhm9l4636ejfv7yd1kk'
-								body_class='text-style'
-								init={{
-									placeholder: "Share your experience...",
-									height: 500,
-									menubar: false,
-									toolbar_location: "bottom",
-									skin: "naked",
-									plugins: [
-										"advlist autolink lists link image",
-										"charmap print preview anchor help",
-										"searchreplace visualblocks code",
-										"insertdatetime media table paste wordcount",
-									],
-									toolbar:
-										"bold italic underline | bullist numlist | spellchecker",
-								}}
-								onChange={handleEditorChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<Link
-								to={isSubmitted && "/dashboard"}
-								style={{ textDecoration: "none" }}
-							>
-								<div
-									style={{
-										width: "50%",
-										margin: "0 auto",
-										marginTop: "50px",
-										marginBottom: "150px",
+					<Paper className={classes.background}>
+						<Grid container>
+							<Grid item xs={12}>
+								<InputTitle
+									onChange={(e) => handleTitle(e)}
+									InputProps={{ className: classes.text }}
+									placeholder='Name your experience...'
+								></InputTitle>
+							</Grid>
+							<Grid item xs={12}>
+								<Editor
+									style={{ fontFamily: "Montserrat" }}
+									apiKey='tyhadidpx0uoffabp2p22ez2jfxaxbhm9l4636ejfv7yd1kk'
+									body_class='text-style'
+									init={{
+										placeholder: "Share your experience in more detail...",
+										height: 500,
+										menubar: false,
+										toolbar_location: "bottom",
+										icons: "material",
+										skin: "naked",
+										content_style: `p{font-family: "Montserrat", font-size: 40px}`,
+										plugins: [
+											"advlist autolink lists link image",
+											"charmap print preview anchor help",
+											"searchreplace visualblocks code",
+											"insertdatetime media table paste wordcount",
+										],
+										toolbar:
+											"bold italic underline fontsizeselect formatselect | bullist numlist | spellchecker ",
 									}}
-									onClick={(e) => articleSubmit(e)}
+									onChange={handleEditorChange}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Link
+									to={isSubmitted && "/dashboard"}
+									style={{ textDecoration: "none" }}
 								>
-									<ButtonLight text={"Share"}></ButtonLight>
-								</div>
-							</Link>
+									<div
+										style={{
+											width: "50%",
+											margin: "0 auto",
+											marginTop: "50px",
+											marginBottom: "150px",
+										}}
+										onClick={(e) => articleSubmit(e)}
+									>
+										<ButtonLight text={"Share"}></ButtonLight>
+									</div>
+								</Link>
+							</Grid>
 						</Grid>
-					</Grid>
+					</Paper>
 				</Grid>
 				<Grid item xs={2}></Grid>
+				<Footer></Footer>
 			</Grid>
 		</Fragment>
 	);

@@ -1,23 +1,21 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
-import Grid from "@material-ui/core/Grid";
+
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
+
 import loginImage from "../img/login.svg";
-import axios from "axios";
 
 import { Link } from "react-router-dom";
-import DividerBar from "../components/ui/Divider";
+
 //Error Handling
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import eventContext from "./contexts/eventContext";
 import errorContext from "./contexts/errorContext";
-import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 
 //STYLING
 const SignInButton = withStyles((theme) => ({

@@ -1,10 +1,17 @@
 import React, { Fragment, useContext } from "react";
+
+//PACKAGES
 import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import heroMom from "../img/hero_mom_window.svg";
-import flowerAccent from "../img/flower_accent.svg";
 
+//ASSETS
+import heroMom from "../img/hero_mom_window.svg";
+
+//CONTEXTS
 import parentContext from "./contexts/parentContext";
+
+//COMPONENTS
+import Loader from "./ui/loader";
 
 const HeroButton = withStyles((theme) => ({
 	root: {
@@ -12,13 +19,11 @@ const HeroButton = withStyles((theme) => ({
 		color: "#f5f5f5",
 		fontWeight: "bold",
 		letterSpacing: "2px",
-
 		borderRadius: "20px",
 		height: "5vh",
 		marginTop: "100px",
 		width: "200px",
 		padding: "30px 40px",
-		marginLeft: "15%",
 		boxShadow: "3px 3px 10px 2px rgba(0,0,0,0.2)",
 		transition: "all 0.5s ease",
 		"&:hover": {
@@ -30,23 +35,37 @@ const HeroButton = withStyles((theme) => ({
 }))(Button);
 
 const useStyles = makeStyles((theme) => ({
-	heroContainer: { width: "100%", display: "flex", position: "relative" },
-	heroImgContainer: {
-		width: "50%",
+	heroContainer: {
+		width: "100%",
+		height: "80vh",
+		display: "flex",
 		position: "relative",
 	},
+	heroImgContainer: {
+		width: "60%",
+		background: `url(${heroMom})`,
+		backgroundSize: "cover",
+		backgroundPosition: "center",
+		clipPath: "polygon(0 0, 100% 0, 100% 100%, 10% 100%)",
+		boxShadow: "inset 20px -15px 20px -16px rgba(83,35,125,0.3)",
+		[theme.breakpoints.down(890)]: { display: "none" },
 
-	heroImg: {
-		maxWidth: "100%",
-		height: "100vh",
+		// backgroundRepeat: "no-repeat",
+		// backgroundAttachment: "fixed",
 	},
 
 	heroText: {
-		width: "50%",
+		marginLeft: "50px",
+		width: "40%",
 		display: "flex",
-
 		justifyContent: "center",
 		flexDirection: "column",
+		[theme.breakpoints.down(890)]: {
+			margin: 0,
+			width: "100%",
+			alignItems: "center",
+			textAlign: "center",
+		},
 	},
 
 	heroWelcome: {
@@ -54,24 +73,27 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "Raleway",
 		fontWeight: "800",
 		lineHeight: "1.4",
+		marginBottom: "30px",
 		color: "#39364f",
-
 		textShadow: "1px 2px 5px rgba(0,0,0,0.1)",
 	},
 
 	heroSub: {
 		color: "#6F7287",
-		marginBottom: "30px",
-
-		marginLeft: "15%",
 		marginRight: "50px",
 		fontSize: "1.5rem",
 		fontFamily: "Raleway",
 		fontWeight: "500",
-		lineHeight: "1.2",
+
 		textShadow: "1px 2px 5px rgba(0,0,0,0.1)",
 		lineHeight: "1.3",
-		width: "60%",
+		width: "100%",
+		[theme.breakpoints.down(890)]: {
+			margin: 0,
+			width: "80%",
+			alignItems: "center",
+			textAlign: "center",
+		},
 	},
 
 	accentContainer: {
@@ -102,12 +124,9 @@ const Hero = () => {
 			<Fragment>
 				<Box className={classes.heroContainer}>
 					<Box className={classes.heroText}>
-						<Typography className={classes.heroSub}>
-							<span className={classes.heroWelcome}>
-								Welcome,
-								<br /> {capitalize(loggedInParent.name)}
-							</span>
-							<br />
+						<Typography className={classes.heroWelcome}>
+							Welcome,<br></br>
+							{capitalize(loggedInParent.name)}
 						</Typography>
 						<Typography className={classes.heroSub}>
 							{" "}
@@ -116,16 +135,21 @@ const Hero = () => {
 						<HeroButton>Get started</HeroButton>
 					</Box>
 					<Box className={classes.heroImgContainer}>
-						<img
+						{/* <img
 							className={classes.heroImg}
 							src={heroMom}
 							alt='woman child window'
-						/>
+						/> */}
 					</Box>
 				</Box>
 			</Fragment>
 		);
-	else return <div>Loading...</div>;
+	else
+		return (
+			<div style={{ height: "100vh", width: "100%" }}>
+				<Loader style={{ margin: "0 auto" }}></Loader>
+			</div>
+		);
 };
 
 export default Hero;

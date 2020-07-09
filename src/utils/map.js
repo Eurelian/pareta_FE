@@ -1,6 +1,5 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
-import { Icon } from "leaflet";
 
 const LocationMap = ({ getCoord }) => {
 	const [hasLocation, setHasLocation] = useState(false);
@@ -48,7 +47,7 @@ const LocationMap = ({ getCoord }) => {
 			>
 				<TileLayer
 					attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-					url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+					url='https://api.mapbox.com/styles/v1/eurelian/ckcauyasf14191it8sp7l42wb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZXVyZWxpYW4iLCJhIjoiY2tjYXY2YnRpMXlubDJ2bWdrdGpzeGZpcyJ9.sdU919fikTtC6bDXCi1b4g'
 				/>
 				{marker}
 			</Map>

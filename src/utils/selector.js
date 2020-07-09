@@ -18,12 +18,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Selector = ({ nameValue, selectorValues, handleClick, id, value }) => {
 	const classes = useStyles();
-	const [age, setAge] = React.useState("");
-	const [open, setOpen] = React.useState(false);
 
-	const handleChange = (event) => {
-		setAge(event.target.value);
-	};
+	const [open, setOpen] = React.useState(false);
 
 	const handleClose = () => {
 		setOpen(false);

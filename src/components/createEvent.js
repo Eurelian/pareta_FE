@@ -14,6 +14,7 @@ import DatePicker from "../utils/date";
 import DarkButton from "../components/ui/ButtonDark";
 import LightButton from "../components/ui/ButtonLight";
 import { Link } from "react-router-dom";
+import Footer from "./footer";
 
 //Toastify
 import { ToastContainer, toast } from "react-toastify";
@@ -22,7 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 //Context
 import eventContext from "./contexts/eventContext";
 
-const Input = withStyles({
+const Input = withStyles((theme) => ({
 	root: {
 		width: "80%",
 		marginTop: "15px",
@@ -36,13 +37,51 @@ const Input = withStyles({
 			fontFamily: "Raleway",
 			fontSize: "1.2rem",
 		},
+		[theme.breakpoints.down(1058)]: {
+			width: "100%",
+		},
 	},
-})(TextField);
+}))(TextField);
 
 const useStyles = makeStyles((theme) => ({
-	container: { marginTop: "50px" },
+	container: {
+		marginBottom: "25px",
+		[theme.breakpoints.down("sm")]: { marginBottom: "0px" },
+	},
+
+	containerMain: {
+		padding: "50px",
+	},
+	underMap: {
+		marginBottom: "100px",
+		[theme.breakpoints.down(1058)]: {
+			marginTop: "100px",
+			marginBottom: "50px",
+		},
+	},
+
+	btn: {
+		textDecoration: "none",
+		maxWidth: "400px",
+		padding: "20px",
+		[theme.breakpoints.down(1058)]: {
+			margin: "0",
+			marginBottom: "10px",
+		},
+		[theme.breakpoints.down(1058)]: {
+			margin: "0",
+			marginBottom: "10px",
+		},
+	},
+	btnContainer: {
+		maxHeight: "300px",
+	},
+	containerSecond: {
+		maxWidth: "1270px",
+	},
 	title: {
 		fontSize: "2.5rem",
+
 		fontFamily: "Raleway",
 		fontWeight: "600",
 		marginBottom: "-50px",
@@ -53,8 +92,12 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "Raleway",
 		fontWeight: "600",
 		color: "#39364f",
+		[theme.breakpoints.down(1058)]: {
+			marginTop: "50px",
+		},
 	},
 	fieldGroup: { marginTop: "50px" },
+
 	input: { fontFamily: "Raleway", fontSize: "2rem" },
 	textArea: { fontFamily: "Montserrat", fontSize: "1rem" },
 	helperText: {
@@ -126,6 +169,8 @@ const CreateEvent = () => {
 		setErrorMessage("");
 	}, [errorMessage]);
 
+	const CHARACTER_LIMIT_MAX = 255;
+
 	return (
 		<Fragment>
 			<NavBar></NavBar>
@@ -140,11 +185,16 @@ const CreateEvent = () => {
 				draggable
 				pauseOnHover
 			/>
-			<Grid container>
-				<Grid item xs={2}></Grid>
-				<Grid className={classes.container} item xs={8}>
-					<Grid container>
-						<Grid item xs={6}>
+			<Grid
+				container
+				direction='column'
+				alignItems='center'
+				justify='center'
+				className={classes.container}
+			>
+				<Grid item xs={12} className={classes.containerMain}>
+					<Grid container justify='center' className={classes.containerSecond}>
+						<Grid item xs={12} md={6}>
 							<form>
 								<Grid container direction='column'>
 									<Grid item xs={12}>
@@ -166,13 +216,17 @@ const CreateEvent = () => {
 										<Typography className={classes.subtitle}>
 											How old should the children be?
 										</Typography>
-										<Grid container alignItems='flex-end'>
-											<Grid item xs={1}>
+										<Grid
+											container
+											alignItems='flex-end'
+											justify='space-around'
+										>
+											<Grid item xs={6} md={1}>
 												<Typography className={classes.helperText}>
 													From:
 												</Typography>
 											</Grid>
-											<Grid item xs={3}>
+											<Grid item xs={6} md={3}>
 												<Selector
 													handleClick={handleAge}
 													nameValue={"Years"}
@@ -181,12 +235,12 @@ const CreateEvent = () => {
 													selectorValues={ageArray}
 												/>
 											</Grid>
-											<Grid item xs={1}>
+											<Grid item xs={6} md={1}>
 												<Typography className={classes.helperText}>
 													to:
 												</Typography>
 											</Grid>
-											<Grid item xs={3}>
+											<Grid item xs={6} md={3}>
 												<Selector
 													handleClick={handleAge}
 													id={"to"}
@@ -208,7 +262,6 @@ const CreateEvent = () => {
 											placeholder='Expected no. of participants'
 											type='number'
 											InputProps={{ style: { fontFamily: "Montserrat" } }}
-											style={{ width: "40%" }}
 											onChange={handleInput}
 										></Input>
 									</Grid>
@@ -220,7 +273,10 @@ const CreateEvent = () => {
 											multiline
 											name='event_description'
 											InputProps={{ className: classes.textArea }}
-											rows={8}
+											value={event.event_description}
+											helperText={`${event.event_description.length}/${CHARACTER_LIMIT_MAX}`}
+											rows={10}
+											inputProps={{ maxLength: CHARACTER_LIMIT_MAX }}
 											placeholder='Describe your event in a few words'
 											variant='outlined'
 											label='Event Description'
@@ -230,30 +286,38 @@ const CreateEvent = () => {
 								</Grid>
 							</form>
 						</Grid>
-						<Grid item xs={6}>
+						<Grid item xs={12} md={6}>
 							<Grid container>
 								<Grid item xs={12} style={{ height: "50vh", width: "100%" }}>
 									<Typography className={classes.subtitle}>
 										{" "}
 										Where will the event take place?
 									</Typography>
+
 									<LocationMap getCoord={getCoord} />
 								</Grid>
-								<Grid item xs={12}>
+								<Grid item xs={12} className={classes.underMap}>
 									<Typography className={classes.subtitle}>
 										{" "}
 										When will the event take place?
 									</Typography>
 									<DatePicker getTime={getTime}></DatePicker>
 								</Grid>
-								<Grid item xs={12} style={{ width: "80%", marginTop: "100px" }}>
-									<Grid container justify='space-around'>
-										<Grid item xs={6} style={{ paddingLeft: "50px" }}>
+								<Grid item xs={12}>
+									<Grid
+										container
+										alignItems='center'
+										className={classes.btnContainer}
+									>
+										<Grid item xs md className={classes.btn}>
 											<LightButton text={"Back"}></LightButton>
 										</Grid>
-										<Grid item xs={6} style={{ paddingLeft: "50px" }}>
+										<Grid item xs md className={classes.btn}>
 											<div onClick={(e) => handleEventSubmit(e)}>
-												<Link to={isSubmitted && "/dashboard"}>
+												<Link
+													style={{ textDecoration: "none" }}
+													to={isSubmitted && "/dashboard"}
+												>
 													<DarkButton text={"Create Event"} />
 												</Link>
 											</div>
@@ -264,7 +328,8 @@ const CreateEvent = () => {
 						</Grid>
 					</Grid>
 				</Grid>
-				<Grid item xs={2}></Grid>
+
+				<Footer></Footer>
 			</Grid>
 		</Fragment>
 	);

@@ -1,17 +1,26 @@
 import React, { Fragment, useState, useContext } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Typography, Box, Menu, MenuItem } from "@material-ui/core";
+import { withStyles, makeStyles, useTheme } from "@material-ui/core/styles";
+import {
+	Typography,
+	Box,
+	Menu,
+	MenuItem,
+	Avatar,
+	Grid,
+	Divider,
+	useMediaQuery,
+} from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 import actionsContext from "./contexts/actionsContext";
+import parentContext from "./contexts/parentContext";
 
 const Nav = withStyles((theme) => ({
 	root: {
 		background: "#F0F0FA",
-
 		height: "75px",
 		boxShadow: "2px 2px 20px 2px rgba(0,0,0,0.1)",
 		display: "flex",
@@ -60,6 +69,13 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 
+	displayMenu: {
+		display: "block",
+	},
+	dontDisplayMenu: {
+		display: "none",
+	},
+
 	icon: { color: "#53237D", marginLeft: "60px", cursor: "pointer" },
 }));
 
@@ -73,8 +89,11 @@ const NavBar = () => {
 		setMenuAnchor(null);
 	};
 	const { parentLogout } = useContext(actionsContext);
+	const { parentAvatar, loggedInParent } = useContext(parentContext);
 
 	const classes = useStyles();
+	const theme = useTheme();
+	const displayLinks = useMediaQuery("(max-width: 750px)");
 	return (
 		<Fragment>
 			<Nav>
@@ -89,13 +108,21 @@ const NavBar = () => {
 					</Typography>
 					<ul className={classes.navLinks}>
 						<li>
-							<Typography className={classes.link} component={Link} to='/posts'>
-								POSTS
+							<Typography
+								className={
+									displayLinks ? classes.dontDisplayMenu : classes.link
+								}
+								component={Link}
+								to='/posts'
+							>
+								EXPERIENCES
 							</Typography>
 						</li>
 						<li>
 							<Typography
-								className={classes.link}
+								className={
+									displayLinks ? classes.dontDisplayMenu : classes.link
+								}
 								component={Link}
 								to='/events'
 							>
@@ -104,7 +131,9 @@ const NavBar = () => {
 						</li>
 						<li>
 							<Typography
-								className={classes.link}
+								className={
+									displayLinks ? classes.dontDisplayMenu : classes.link
+								}
 								component={Link}
 								to='/parents'
 							>
@@ -124,6 +153,101 @@ const NavBar = () => {
 								open={Boolean(menuAnchor)}
 								keepMounted
 							>
+								<MenuItem>
+									<Grid
+										container
+										style={{ marginTop: "5px" }}
+										alignItems='center'
+									>
+										<Avatar
+											style={{ width: "35px", height: "35px" }}
+											src={parentAvatar ? parentAvatar : "null"}
+										></Avatar>
+										<Grid item>
+											<Grid Container>
+												<Typography
+													style={{
+														fontFamily: "Montserrat",
+														fontWeight: "bold",
+														fontSize: "0.6rem",
+														color: "#53237d",
+														marginLeft: "7px",
+
+														marginBottom: "3px",
+													}}
+												>
+													MEMBER
+												</Typography>
+												<Typography
+													style={{
+														fontFamily: "Montserrat",
+														fontWeight: "bold",
+
+														fontSize: "0.7rem",
+														color: "#39364f",
+														marginLeft: "7px",
+													}}
+												>
+													{loggedInParent && loggedInParent.name}
+												</Typography>
+											</Grid>
+										</Grid>
+									</Grid>
+								</MenuItem>
+
+								{/* @screen Breakpoint 845px */}
+								<div
+									className={
+										displayLinks ? classes.displayMenu : classes.dontDisplayMenu
+									}
+								>
+									<Divider
+										style={{
+											margin: "0 auto",
+											marginTop: "8px",
+											marginBottom: "8px",
+
+											background: "#53237d",
+											opacity: "0.2",
+										}}
+										light
+									></Divider>
+									<MenuItem
+										component={Link}
+										to='/posts'
+										className={classes.menuItem}
+									>
+										Experiences
+									</MenuItem>
+									<MenuItem
+										component={Link}
+										to='/events'
+										className={classes.menuItem}
+									>
+										Events
+									</MenuItem>
+									<MenuItem
+										component={Link}
+										to='/parents'
+										className={classes.menuItem}
+									>
+										Talk
+									</MenuItem>
+								</div>
+
+								{/* end @screen Breakpoint 845px */}
+
+								<Divider
+									style={{
+										margin: "0 auto",
+										marginTop: "8px",
+										marginBottom: "8px",
+
+										background: "#53237d",
+										opacity: "0.2",
+									}}
+									light
+								></Divider>
 								<MenuItem
 									component={Link}
 									to='/dashboard'
