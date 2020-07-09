@@ -264,7 +264,7 @@ const EventsPage = () => {
 							<Grid container className={classes.container}>
 								<Grid item xs={12}>
 									<Typography className={classes.sectionTitle}>
-										{eventsCreated === null || eventsCreated.length < 1
+										{eventsCreated !== null
 											? `Create an event`
 											: `Events you created`}{" "}
 									</Typography>
@@ -345,7 +345,9 @@ const EventsPage = () => {
 						</Grid>
 
 						{/* SUBSCRIBED TO */}
-						{eventsSubscribed === null || eventsSubscribed.length < 1 ? null : (
+						{!eventsSubscribed ||
+						eventsSubscribed === null ||
+						eventsSubscribed.length < 1 ? null : (
 							<Grid item container className={classes.gridContainer} xs={12}>
 								<Grid container className={classes.container}>
 									<>
