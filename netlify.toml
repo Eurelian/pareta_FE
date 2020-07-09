@@ -3,6 +3,8 @@
   [[redirects]]
   from = "/login"
   to = "https://paretaserver.herokuapp.com/login"
+  force = true
+  status=200
 
   [[redirects]]
   from = "/*"
