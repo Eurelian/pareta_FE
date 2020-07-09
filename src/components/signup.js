@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect, useCallback } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
@@ -147,31 +147,22 @@ const SignUp = ({ handleSignUp, handleSignUpSubmit }) => {
 	const classes = useStyles();
 	const { errorMessage, setErrorMessage } = useContext(eventContext);
 
-	// const notify = () =>
-	// 	toast.error(`🙊 ${errorMessage}`, {
-	// 		position: "top-center",
-	// 		autoClose: 5000,
-	// 		hideProgressBar: false,
-	// 		closeOnClick: true,
-	// 		pauseOnHover: true,
-	// 		draggable: true,
-	// 		progress: undefined,
-	// 	});
+	const notify = useCallback(() => {
+		toast.error(`🙊 ${errorMessage}`, {
+			position: "top-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+	}, [errorMessage]);
 
 	useEffect(() => {
-		// const notify = () =>
-		// 	toast.error(`🙊 ${errorMessage}`, {
-		// 		position: "top-center",
-		// 		autoClose: 5000,
-		// 		hideProgressBar: false,
-		// 		closeOnClick: true,
-		// 		pauseOnHover: true,
-		// 		draggable: true,
-		// 		progress: undefined,
-		// 	});
-		// if (errorMessage) notify();
+		if (errorMessage) notify(errorMessage);
 		setErrorMessage("");
-	}, [setErrorMessage, errorMessage]);
+	}, [setErrorMessage, , notify, errorMessage]);
 
 	return (
 		<Fragment>

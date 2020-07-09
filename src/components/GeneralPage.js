@@ -230,6 +230,7 @@ const EventsPage = () => {
 						return setIsResult(false);
 					}
 					setIsResult(true);
+					console.log(res.data);
 					setEventData(res.data);
 				})
 				.catch((err) => console.log(err));

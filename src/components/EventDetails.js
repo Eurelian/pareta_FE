@@ -152,6 +152,7 @@ const EventDetails = () => {
 		setIsOpen(!isOpen);
 	};
 
+	// done
 	const handleFavorite = () => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -165,7 +166,7 @@ const EventDetails = () => {
 		}
 	};
 
-	//EVENT SINGLE GET
+	//EVENT SINGLE GET -done
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -173,6 +174,7 @@ const EventDetails = () => {
 				.get(`events/${id}`)
 				.then((res) => {
 					setSingleEvent(res.data);
+
 					if (res.data.attending.length === res.data.size) setIsFull(true);
 					else setIsFull(false);
 					console.log(res.data);
@@ -181,7 +183,7 @@ const EventDetails = () => {
 		}
 	}, [id, setSingleEvent]);
 
-	//EVENT IS SUBSCRIBED GET
+	//EVENT IS SUBSCRIBED GET -done
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -194,7 +196,7 @@ const EventDetails = () => {
 		}
 	}, [id, setIsSubscribed]);
 
-	//EVENT IS CREATED GET
+	//EVENT IS CREATED GET - done
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -207,7 +209,7 @@ const EventDetails = () => {
 		}
 	}, [id, setIsCreated]);
 
-	//EVENT SUBSCRIBE POST
+	//EVENT SUBSCRIBE POST - done
 	const handleEventSubscribe = () => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -221,7 +223,7 @@ const EventDetails = () => {
 		}
 	};
 
-	//EVENT DELETE
+	//EVENT DELETE - done
 
 	const handleEventDelete = () => {
 		const token = Cookies.get("parent-token");
@@ -236,7 +238,7 @@ const EventDetails = () => {
 		}
 	};
 
-	//EVENT UNSUBSCRIBE
+	//EVENT UNSUBSCRIBE - done
 	const handleEventUnsubscribe = () => {
 		const token = Cookies.get("parent-token");
 		if (token) {

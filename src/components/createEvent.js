@@ -159,17 +159,6 @@ const CreateEvent = () => {
 		});
 	}, [errorMessage]);
 
-	// const notify = () =>
-	// 	// 	toast.error(`🙊 ${errorMessage}`, {
-	// 	// 		position: "top-center",
-	// 	// 		autoClose: 5000,
-	// 	// 		hideProgressBar: false,
-	// 	// 		closeOnClick: true,
-	// 	// 		pauseOnHover: true,
-	// 	// 		draggable: true,
-	// 	// 		progress: undefined,
-	// 	// 	});
-
 	useEffect(() => {
 		if (errorMessage) notify(errorMessage);
 		setErrorMessage("");

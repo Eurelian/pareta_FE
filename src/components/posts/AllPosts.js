@@ -167,7 +167,7 @@ const AllPosts = () => {
 		randomAvatars,
 	} = useContext(articleContext);
 
-	//Get Favorite Articles
+	//Get Favorite Articles done
 	useEffect(() => {
 		const token = Cookies.get("parent-token");
 		if (token) {
@@ -182,7 +182,7 @@ const AllPosts = () => {
 		}
 	}, [setArticlesFavorite]);
 
-	//SEARCH ARTICLES
+	//SEARCH ARTICLES - done
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
 		console.log("works");
