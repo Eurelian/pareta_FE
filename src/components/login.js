@@ -170,17 +170,18 @@ const Login = ({
 	const { errorMessage, setErrorMessage } = useContext(eventContext);
 	const { isError, setIsError } = useContext(errorContext);
 
+	const notify = () =>
+		toast.error(`🙊 ${errorMessage}`, {
+			position: "top-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+
 	useEffect(() => {
-		const notify = () =>
-			toast.error(`🙊 ${errorMessage}`, {
-				position: "top-center",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
 		if (errorMessage) {
 			setIsError(true);
 			notify();
