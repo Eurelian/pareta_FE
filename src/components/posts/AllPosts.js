@@ -180,7 +180,7 @@ const AllPosts = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [setArticlesFavorite]);
 
 	//SEARCH ARTICLES
 	const handleSearchSubmit = (e) => {
@@ -215,7 +215,7 @@ const AllPosts = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [setArticles]);
 
 	//Get Created Articles
 	useEffect(() => {
@@ -230,7 +230,7 @@ const AllPosts = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [setArticlesCreated]);
 
 	return (
 		<Fragment>

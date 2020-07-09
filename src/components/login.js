@@ -186,7 +186,7 @@ const Login = ({
 			notify();
 		}
 		setErrorMessage("");
-	}, [errorMessage]);
+	}, [errorMessage, notify, setErrorMessage, setIsError]);
 	return (
 		<Fragment>
 			<div style={{ width: "100%", height: "100vh" }}>

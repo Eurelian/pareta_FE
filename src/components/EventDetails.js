@@ -179,7 +179,7 @@ const EventDetails = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, [id]);
+	}, [id, setSingleEvent]);
 
 	//EVENT IS SUBSCRIBED GET
 	useEffect(() => {
@@ -192,7 +192,7 @@ const EventDetails = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, [id]);
+	}, [id, setIsSubscribed]);
 
 	//EVENT IS CREATED GET
 	useEffect(() => {
@@ -205,7 +205,7 @@ const EventDetails = () => {
 				})
 				.catch((err) => console.error(err));
 		}
-	}, [id]);
+	}, [id, setIsCreated]);
 
 	//EVENT SUBSCRIBE POST
 	const handleEventSubscribe = () => {

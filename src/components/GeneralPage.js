@@ -212,7 +212,7 @@ const EventsPage = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [setEventsCreated]);
 
 	//SEARCH FOR EVENT
 
@@ -249,7 +249,7 @@ const EventsPage = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [setEventsSubscribed]);
 
 	return (
 		<Fragment>

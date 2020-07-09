@@ -161,7 +161,7 @@ const CreateEvent = () => {
 	useEffect(() => {
 		if (errorMessage) notify();
 		setErrorMessage("");
-	}, [errorMessage]);
+	}, [notify, setErrorMessage, errorMessage]);
 
 	const CHARACTER_LIMIT_MAX = 255;
 

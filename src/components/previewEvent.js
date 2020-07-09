@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 
 //PACKAGES
 import {
@@ -24,9 +24,6 @@ import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../utils/paretaClient";
 import { handleDate } from "../utils/dateConversion";
 import SkeletonCard from "../components/ui/SkeletonCard";
-
-//Contexts
-import parentContext from "./contexts/parentContext";
 
 //STYLES
 const useStyles = makeStyles((theme) => ({

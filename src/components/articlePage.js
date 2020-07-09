@@ -111,7 +111,7 @@ const ArticlePage = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [id, loggedInParent._id, setArticle]);
 
 	//CHECK IF ARTICLE IS FAVORITE
 	useEffect(() => {

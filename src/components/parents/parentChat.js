@@ -257,7 +257,7 @@ const ParentChat = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [isActive]);
 
 	//Get New Message Input
 	const handleInput = (e) => {
