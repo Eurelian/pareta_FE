@@ -6,11 +6,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import CardContent from "@material-ui/core/CardContent";
-import loginImage from "../img/login.svg";
+
 import playgroundImage from "../img/playground.svg";
 
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 //Error Handling

@@ -86,9 +86,9 @@ const ArticlePage = () => {
 
 	const {
 		article,
-		articles,
+
 		setArticle,
-		setArticles,
+
 		setArticlesFavorite,
 		randomAvatars,
 	} = useContext(articleContext);

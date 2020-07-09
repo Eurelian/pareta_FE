@@ -6,10 +6,9 @@ import React, {
 	useContext,
 } from "react";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
-import { Typography, Avatar, Grid, Button } from "@material-ui/core/";
+import { Typography, Avatar, Grid } from "@material-ui/core/";
 import ButtonLight from "../components/ui/ButtonLight";
 import { Link } from "react-router-dom";
-import { Icon } from "leaflet";
 
 import eventContext from "../components/contexts/eventContext";
 
@@ -36,7 +35,9 @@ const NearMeMap = ({ getCoord }) => {
 		<Marker style={{ background: "red" }} position={latlng}>
 			<Popup>
 				<Grid container direction='column' alignItems='center'>
-					<Typography style={{ margin: "0 auto" }}>👪</Typography>
+					<Typography style={{ margin: "0 auto" }}>
+						<span role='img'>👪</span>
+					</Typography>
 					<Typography>You are here</Typography>
 				</Grid>
 			</Popup>

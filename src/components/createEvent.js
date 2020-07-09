@@ -1,13 +1,7 @@
-import React, { Fragment, useState, useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import NavBar from "./navbar";
-import {
-	Grid,
-	Box,
-	TextField,
-	Typography,
-	useEventCallback,
-} from "@material-ui/core";
+import { Grid, TextField, Typography } from "@material-ui/core";
 import Selector from "../utils/selector";
 import LocationMap from "../utils/map";
 import DatePicker from "../utils/date";

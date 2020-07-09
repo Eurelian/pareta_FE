@@ -138,11 +138,6 @@ const useStyles = makeStyles((theme) => ({
 	parentSelect: {
 		cursor: "pointer",
 		padding: "20px 5px 10px 10px",
-
-		cursor: "pointer",
-		// "&:hover": {
-		// 	background: "red",
-		// },
 	},
 	parentSelected: {
 		background: "#D6BEEF",
@@ -200,13 +195,13 @@ const ParentChat = () => {
 	const [isActive, setIsActive] = useState(null);
 
 	const [favoriteParents, setFavoriteParents] = useState(null);
-	const [currentConversation, setCurrentConversation] = useState(null);
+	// const [currentConversation, setCurrentConversation] = useState(null);
 	const [messages, setMessages] = useState(null);
 	const [selectedParent, setSelectedParent] = useState(null);
 	const [newMessage, setNewMessage] = useState(null);
 
 	const selectConversation = (e) => {
-		setCurrentConversation(e.currentTarget.id);
+		// setCurrentConversation(e.currentTarget.id);
 		setIsActive(e.currentTarget.id);
 	};
 
@@ -267,7 +262,6 @@ const ParentChat = () => {
 	//Get New Message Input
 	const handleInput = (e) => {
 		setNewMessage(e.target.value);
-		console.log(newMessage);
 	};
 
 	//Submit New Message

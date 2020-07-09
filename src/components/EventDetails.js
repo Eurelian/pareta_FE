@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 	containerSecond: {
 		maxWidth: "1270px",
+		width: "100%",
 	},
 	title: {
 		fontSize: "2.8rem",
@@ -178,7 +179,7 @@ const EventDetails = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [id]);
 
 	//EVENT IS SUBSCRIBED GET
 	useEffect(() => {
@@ -191,7 +192,7 @@ const EventDetails = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [id]);
 
 	//EVENT IS CREATED GET
 	useEffect(() => {
@@ -204,7 +205,7 @@ const EventDetails = () => {
 				})
 				.catch((err) => console.error(err));
 		}
-	}, []);
+	}, [id]);
 
 	//EVENT SUBSCRIBE POST
 	const handleEventSubscribe = () => {

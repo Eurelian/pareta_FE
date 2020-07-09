@@ -357,61 +357,55 @@ const EventsPage = () => {
 											{eventsSubscribed.map((item, i) => {
 												return (
 													<>
-														<FadeIn>
-															<Grid
-																key={i++}
-																className={classes.cardContainer}
-																xs={3}
-															>
-																<Card className={classes.card}>
-																	<CardActionArea
-																		className={classes.cardAction}
-																		component={Link}
-																		to={`/events/${item._id}`}
-																		onClick={() => setIsCreated(false)}
-																	>
-																		<CardMedia
-																			className={classes.cardImage}
-																			image={event}
-																		></CardMedia>
-																		<CardContent
-																			className={classes.cardContent}
-																		>
-																			<Typography className={classes.cardDate}>
-																				{handleDate(item.date)}
-																			</Typography>
-																			<Typography className={classes.cardTitle}>
-																				{item.name}
-																			</Typography>
-																			<Typography
-																				className={classes.cardSubtext}
-																			>
-																				{item.description}
-																			</Typography>
+														<Grid
+															key={i++}
+															className={classes.cardContainer}
+															xs={3}
+														>
+															<Card className={classes.card}>
+																<CardActionArea
+																	className={classes.cardAction}
+																	component={Link}
+																	to={`/events/${item._id}`}
+																	onClick={() => setIsCreated(false)}
+																>
+																	<CardMedia
+																		className={classes.cardImage}
+																		image={event}
+																	></CardMedia>
+																	<CardContent className={classes.cardContent}>
+																		<Typography className={classes.cardDate}>
+																			{handleDate(item.date)}
+																		</Typography>
+																		<Typography className={classes.cardTitle}>
+																			{item.name}
+																		</Typography>
+																		<Typography className={classes.cardSubtext}>
+																			{item.description}
+																		</Typography>
 
-																			<Grid
-																				container
-																				alignItems='center'
-																				className={classes.aGroup}
+																		<Grid
+																			container
+																			alignItems='center'
+																			className={classes.aGroup}
+																		>
+																			<Avatar
+																				src={
+																					randomAvatars[
+																						Math.floor(Math.random() * 49) + 1
+																					].picture.thumbnail
+																				}
+																			></Avatar>
+																			<Typography
+																				className={classes.authorName}
 																			>
-																				<Avatar
-																					src={
-																						randomAvatars[
-																							Math.floor(Math.random() * 49) + 1
-																						].picture.thumbnail
-																					}
-																				></Avatar>
-																				<Typography
-																					className={classes.authorName}
-																				>
-																					{item.organizer.name}
-																				</Typography>
-																			</Grid>
-																		</CardContent>
-																	</CardActionArea>
-																</Card>
-															</Grid>
-														</FadeIn>
+																				{item.organizer.name}
+																			</Typography>
+																		</Grid>
+																	</CardContent>
+																</CardActionArea>
+															</Card>
+														</Grid>
 													</>
 												);
 											})}
@@ -499,58 +493,56 @@ const EventsPage = () => {
 									) : isResult && eventData ? (
 										handleSlice(eventData).map((item, i) => {
 											return (
-												<FadeIn>
-													<Grid
-														key={i++}
-														item
-														className={classes.cardContainer}
-														xs={3}
-													>
-														<Card className={classes.card}>
-															<CardActionArea
-																className={classes.cardAction}
-																component={Link}
-																to={`/events/${item._id}`}
-															>
-																<CardMedia
-																	className={classes.cardImage}
-																	image={event}
-																></CardMedia>
-																<CardContent className={classes.cardContent}>
-																	<Typography className={classes.cardDate}>
-																		{handleDate(item.date)}
-																	</Typography>
-																	<Typography className={classes.cardTitle}>
-																		{item.name}
-																	</Typography>
-																	<Typography className={classes.cardSubtext}>
-																		{item.description}
-																	</Typography>
-																	<Grid
-																		container
-																		alignItems='center'
-																		className={classes.aGroup}
+												<Grid
+													key={i++}
+													item
+													className={classes.cardContainer}
+													xs={3}
+												>
+													<Card className={classes.card}>
+														<CardActionArea
+															className={classes.cardAction}
+															component={Link}
+															to={`/events/${item._id}`}
+														>
+															<CardMedia
+																className={classes.cardImage}
+																image={event}
+															></CardMedia>
+															<CardContent className={classes.cardContent}>
+																<Typography className={classes.cardDate}>
+																	{handleDate(item.date)}
+																</Typography>
+																<Typography className={classes.cardTitle}>
+																	{item.name}
+																</Typography>
+																<Typography className={classes.cardSubtext}>
+																	{item.description}
+																</Typography>
+																<Grid
+																	container
+																	alignItems='center'
+																	className={classes.aGroup}
+																>
+																	<Avatar
+																		src={
+																			randomAvatars[
+																				Math.floor(Math.random() * 49) + 1
+																			].picture.thumbnail
+																		}
 																	>
-																		<Avatar
-																			src={
-																				randomAvatars[
-																					Math.floor(Math.random() * 49) + 1
-																				].picture.thumbnail
-																			}
-																		>
-																			{item.organizer.name
-																				.slice(0, 1)
-																				.toUpperCase()}
-																		</Avatar>
-																		<Typography className={classes.authorName}>
-																			{item.organizer.name}
-																		</Typography>
-																	</Grid>
-																</CardContent>
-															</CardActionArea>
-														</Card>
-													</Grid>
-												</FadeIn>
+																		{item.organizer.name
+																			.slice(0, 1)
+																			.toUpperCase()}
+																	</Avatar>
+																	<Typography className={classes.authorName}>
+																		{item.organizer.name}
+																	</Typography>
+																</Grid>
+															</CardContent>
+														</CardActionArea>
+													</Card>
+												</Grid>
 											);
 										})
 									) : (

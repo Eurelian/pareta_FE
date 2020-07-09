@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import { withStyles, makeStyles, useTheme } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import {
 	Typography,
 	Box,
@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import actionsContext from "./contexts/actionsContext";
 import parentContext from "./contexts/parentContext";
 
-const Nav = withStyles((theme) => ({
+const Nav = withStyles(() => ({
 	root: {
 		background: "#F0F0FA",
 		height: "75px",
@@ -29,7 +29,7 @@ const Nav = withStyles((theme) => ({
 	},
 }))(AppBar);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	wrapper: {
 		width: "60%",
 		display: "flex",
@@ -92,7 +92,7 @@ const NavBar = () => {
 	const { parentAvatar, loggedInParent } = useContext(parentContext);
 
 	const classes = useStyles();
-	const theme = useTheme();
+
 	const displayLinks = useMediaQuery("(max-width: 750px)");
 	return (
 		<Fragment>
