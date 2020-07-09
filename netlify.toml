@@ -21,8 +21,6 @@
   status=200
 
 
-  force = true
-  status=200
   [[redirects]]
   from = "/articles/"
   to = "https://paretaserver.herokuapp.com/articles/"
