@@ -148,20 +148,21 @@ const CreateEvent = () => {
 		setEvent({ ...event, event_date: date });
 	};
 
-	const notify = () =>
-		toast.error(`🙊${errorMessage}`, {
-			position: "top-center",
-			autoClose: 5000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true,
-			progress: undefined,
-		});
 	useEffect(() => {
+		const notify = () =>
+			toast.error(`🙊${errorMessage}`, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+			});
+
 		if (errorMessage) notify();
 		setErrorMessage("");
-	}, [notify, setErrorMessage, errorMessage]);
+	}, [setErrorMessage, errorMessage]);
 
 	const CHARACTER_LIMIT_MAX = 255;
 
