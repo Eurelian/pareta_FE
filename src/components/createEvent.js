@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import Footer from "./footer";
 
 //Toastify
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify"; //toast
 import "react-toastify/dist/ReactToastify.css";
 
 //Context

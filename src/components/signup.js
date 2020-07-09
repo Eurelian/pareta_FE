@@ -12,7 +12,7 @@ import playgroundImage from "../img/playground.svg";
 import { Link } from "react-router-dom";
 
 //Error Handling
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify"; //toast
 import "react-toastify/dist/ReactToastify.css";
 import eventContext from "./contexts/eventContext";
 
