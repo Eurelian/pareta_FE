@@ -147,16 +147,16 @@ const SignUp = ({ handleSignUp, handleSignUpSubmit }) => {
 	const classes = useStyles();
 	const { errorMessage, setErrorMessage } = useContext(eventContext);
 
-	const notify = () =>
-		toast.error(`🙊 ${errorMessage}`, {
-			position: "top-center",
-			autoClose: 5000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true,
-			progress: undefined,
-		});
+	// const notify = () =>
+	// 	toast.error(`🙊 ${errorMessage}`, {
+	// 		position: "top-center",
+	// 		autoClose: 5000,
+	// 		hideProgressBar: false,
+	// 		closeOnClick: true,
+	// 		pauseOnHover: true,
+	// 		draggable: true,
+	// 		progress: undefined,
+	// 	});
 
 	useEffect(() => {
 		const notify = () =>
