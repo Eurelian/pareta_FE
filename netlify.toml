@@ -6,7 +6,6 @@
   force = true
   status=200
 
-
   [[redirects]]
   from = "/register"
   to = "https://paretaserver.herokuapp.com/register"

@@ -218,7 +218,7 @@ const EventsPage = () => {
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
-		console.log("works");
+
 		const token = Cookies.get("parent-token");
 		if (token) {
 			refresh();
@@ -256,7 +256,7 @@ const EventsPage = () => {
 		<Fragment>
 			<NavBar></NavBar>
 			<Grid container direction='column'>
-				{eventData !== null || eventData.length > 0 ? (
+				{!eventData || eventData !== null || eventData.length > 0 ? (
 					<>
 						{/* CREATED EVENTS */}
 
