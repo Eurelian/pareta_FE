@@ -116,8 +116,8 @@
   status=200
 
   [[redirects]]
-  from = "/events/:id"
-  to = "https://paretaserver.herokuapp.com/events/:id"
+  from = "/events/"
+  to = "https://paretaserver.herokuapp.com/events/"
   force = true
   status=200
 
