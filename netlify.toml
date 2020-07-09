@@ -1,131 +1,49 @@
 
 
-  [[redirects]]
-  from = "/login"
-  to = "https://paretaserver.herokuapp.com/login"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/register"
-  to = "https://paretaserver.herokuapp.com/register"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/events/created/:id"
-  to = "https://paretaserver.herokuapp.com/dashboard/events/created/:id"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/events/created/"
-  to = "https://paretaserver.herokuapp.com/dashboard/events/created/"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/events/subscribed/:id"
-  to = "https://paretaserver.herokuapp.com/dashboard/events/subscribed/:id"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/events/subscribed"
-  to = "https://paretaserver.herokuapp.com/dashboard/events/subscribed"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/events/:id"
-  to = "https://paretaserver.herokuapp.com/dashboard/events/:id"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/events"
-  to = "https://paretaserver.herokuapp.com/dashboard/events"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/post/favorite/:id"
-  to = "https://paretaserver.herokuapp.com/dashboard/post/favorite/:id"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/posts/favorite"
-  to = "https://paretaserver.herokuapp.com/dashboard/posts/favorite"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/posts"
-  to = "https://paretaserver.herokuapp.com/dashboard/posts"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/parent/:id"
-  to = "https://paretaserver.herokuapp.com/dashboard/parent/:id"
+    [[redirects]]
+  from = "/messages"
+  to = "https://paretaserver.herokuapp.com/messages/"
   force = true
   status=200
 
 
-  [[redirects]]
-  from = "/dashboard/favorite-parents"
-  to = "https://paretaserver.herokuapp.com/dashboard/favorite-parents"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard/favorite-parent"
-  to = "https://paretaserver.herokuapp.com/dashboard/favorite-parent"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/dashboard"
-  to = "https://paretaserver.herokuapp.com/dashboard"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/events/search"
-  to = "https://paretaserver.herokuapp.com/events/search"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/events/subscribe"
-  to = "https://paretaserver.herokuapp.com/events/subscribe"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/events/:id"
-  to = "https://paretaserver.herokuapp.com/events/:id"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/articles/preview"
-  to = "https://paretaserver.herokuapp.com/articles/preview"
-  force = true
-  status=200
-
-  [[redirects]]
-  from = "/events/"
+   [[redirects]]
+  from = "/events"
   to = "https://paretaserver.herokuapp.com/events/"
   force = true
   status=200
 
+
   [[redirects]]
-  from = "/articles/preview"
-  to = "https://paretaserver.herokuapp.com/articles/preview"
+  from = "/dashboard"
+  to = "https://paretaserver.herokuapp.com/dashboard/"
   force = true
   status=200
+
+
+  force = true
+  status=200
+  [[redirects]]
+  from = "/articles/"
+  to = "https://paretaserver.herokuapp.com/articles/"
+  force = true
+  status=200
+
+ [[redirects]]
+  from = "/register"
+  to = "https://paretaserver.herokuapp.com/register/"
+  force = true
+  status=200
+
+  [[redirects]]
+  from = "/login"
+  to = "https://paretaserver.herokuapp.com/login/"
+  force = true
+  status=200
+
+
+
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
