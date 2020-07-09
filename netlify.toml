@@ -1,41 +1,41 @@
 
 
-    [[redirects]]
-  from = "/messages"
-  to = "https://paretaserver.herokuapp.com/messages/"
+  [[redirects]]
+  from = "/messages/*"
+  to = "/messages"
   force = true
   status=200
 
 
    [[redirects]]
-  from = "/events"
-  to = "https://paretaserver.herokuapp.com/events/"
+  from = "/events/*"
+  to = "/events"
   force = true
   status=200
 
 
   [[redirects]]
-  from = "/dashboard"
-  to = "https://paretaserver.herokuapp.com/dashboard/"
+  from = "/dashboard/*"
+  to = "/dashboard"
   force = true
   status=200
 
 
   [[redirects]]
-  from = "/articles/"
-  to = "https://paretaserver.herokuapp.com/articles/"
+  from = "/articles/*"
+  to = "/articles"
   force = true
   status=200
 
  [[redirects]]
-  from = "/register"
-  to = "https://paretaserver.herokuapp.com/register/"
+  from = "/register/*"
+  to = "/register"
   force = true
   status=200
 
   [[redirects]]
-  from = "/login"
-  to = "https://paretaserver.herokuapp.com/login/"
+  from = "/login/*"
+  to = "/login"
   force = true
   status=200
 
