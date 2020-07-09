@@ -182,12 +182,22 @@ const Login = ({
 		});
 
 	useEffect(() => {
+		const notify = () =>
+			toast.error(`🙊 ${errorMessage}`, {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+			});
 		if (errorMessage) {
 			setIsError(true);
 			notify();
 		}
 		setErrorMessage("");
-	}, [errorMessage, notify(), setErrorMessage, setIsError]);
+	}, [errorMessage, setErrorMessage, setIsError]);
 	return (
 		<Fragment>
 			<div style={{ width: "100%", height: "100vh" }}>
