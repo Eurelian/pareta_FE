@@ -36,7 +36,9 @@ const NearMeMap = ({ getCoord }) => {
 			<Popup>
 				<Grid container direction='column' alignItems='center'>
 					<Typography style={{ margin: "0 auto" }}>
-						<span role='img'>👪</span>
+						<span role='img' aria-label='family emoji'>
+							👪
+						</span>
 					</Typography>
 					<Typography>You are here</Typography>
 				</Grid>

@@ -160,7 +160,7 @@ const SignUp = ({ handleSignUp, handleSignUpSubmit }) => {
 	useEffect(() => {
 		if (errorMessage) notify();
 		setErrorMessage("");
-	}, [notify, setErrorMessage, errorMessage]);
+	}, [setErrorMessage, errorMessage]);
 
 	return (
 		<Fragment>

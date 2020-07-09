@@ -124,7 +124,7 @@ const ArticlePage = () => {
 				})
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [id]);
 
 	//ARTICLE ADD TO FAVORITE
 	const handleBookmark = () => {
