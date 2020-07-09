@@ -181,23 +181,23 @@ const Login = ({
 			progress: undefined,
 		});
 
-	useEffect(() => {
-		const notify = () =>
-			toast.error(`🙊 ${errorMessage}`, {
-				position: "top-center",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		if (errorMessage) {
-			setIsError(true);
-			notify();
-		}
-		setErrorMessage("");
-	}, [errorMessage, setErrorMessage, setIsError]);
+	// useEffect(() => {
+	// 	const notify = () =>
+	// 		toast.error(`🙊 ${errorMessage}`, {
+	// 			position: "top-center",
+	// 			autoClose: 5000,
+	// 			hideProgressBar: false,
+	// 			closeOnClick: true,
+	// 			pauseOnHover: true,
+	// 			draggable: true,
+	// 			progress: undefined,
+	// 		});
+	// 	if (errorMessage) {
+	// 		setIsError(true);
+	// 		notify();
+	// 	}
+	// 	setErrorMessage("");
+	// }, [errorMessage, setErrorMessage, setIsError]);
 	return (
 		<Fragment>
 			<div style={{ width: "100%", height: "100vh" }}>
