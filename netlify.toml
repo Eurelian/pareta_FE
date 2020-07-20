@@ -60,14 +60,27 @@
   status=200
 
  [[redirects]]
- from= "events/dashboard/events/subscribed/:id"
+ from= "/events/dashboard/events/subscribed/:id"
  to="https://paretaserver.herokuapp.com/dashboard/events/subscribed/:id"
  status=200
 
+
  [[redirects]]
- from= "events/dashboard/events/created/:id"
+ from= "/dashboard/events/subscribed/"
+ to="https://paretaserver.herokuapp.com/dashboard/events/subscribed/"
+ status=200
+
+ [[redirects]]
+ from= "/events/dashboard/events/created/:id"
  to="https://paretaserver.herokuapp.com/dashboard/events/created/:id"
  status=200
+
+
+ [[redirects]]
+ from= "/dashboard/events/created/"
+ to="https://paretaserver.herokuapp.com/dashboard/events/created/"
+ status=200
+
 
   [[redirects]]
   from ="/dashboard"
