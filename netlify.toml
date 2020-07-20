@@ -10,16 +10,17 @@
   status=200
 
 
+ [[redirects]]
+  from ="/events/:id"
+  to="https://paretaserver.herokuapp.com/events/:id"
+  status=200
 
   [[redirects]]
   from ="/events"
   to="https://paretaserver.herokuapp.com/events"
   status=200
 
-  [[redirects]]
-  from ="/events/:id"
-  to="https://paretaserver.herokuapp.com/events/:id"
-  status=200
+
 
 
   [[redirects]]
