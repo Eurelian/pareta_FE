@@ -69,7 +69,8 @@ const App = () => {
 	const [eventsCreated, setEventsCreated] = useState(null);
 	const [eventsSubscribed, setEventsSubscribed] = useState(null);
 	const [isCreated, setIsCreated] = useState(false);
-	const [randomAvatars, setRandomAvatars] = useState(false);
+	const [randomAvatars] = useState(false);
+	// setRandomAvatars
 
 	//EVENT DATA GET
 	useEffect(() => {
