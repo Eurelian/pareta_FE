@@ -75,9 +75,15 @@
   status=200
 
  [[redirects]]
+ from= "/events/dashboard/events/:id"
+ to="https://paretaserver.herokuapp.com/dashboard/events/:id"
+ status=200
+
+ [[redirects]]
  from= "/events/dashboard/events/subscribed/:id"
  to="https://paretaserver.herokuapp.com/dashboard/events/subscribed/:id"
  status=200
+
 
 
  [[redirects]]
