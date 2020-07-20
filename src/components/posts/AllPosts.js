@@ -367,7 +367,10 @@ const AllPosts = () => {
 																		>
 																			<Avatar
 																				src={
-																					randomAvatars[i++].picture.thumbnail
+																					randomAvatar
+																						? randomAvatars[i++].picture
+																								.thumbnail
+																						: null
 																				}
 																			></Avatar>
 																			<Typography
