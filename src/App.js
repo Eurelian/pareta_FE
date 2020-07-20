@@ -64,12 +64,10 @@ const App = () => {
 	});
 
 	//EVENT DATA
-
 	const [eventData, setEventData] = useState(null);
 	const [singleEvent, setSingleEvent] = useState(null);
 	const [eventsCreated, setEventsCreated] = useState(null);
 	const [eventsSubscribed, setEventsSubscribed] = useState(null);
-
 	const [isCreated, setIsCreated] = useState(false);
 	const [randomAvatars, setRandomAvatars] = useState(false);
 
@@ -85,13 +83,13 @@ const App = () => {
 		}
 	}, [setEventData]);
 
-	//GET 100 random AVATARS
-	useEffect(() => {
-		axios
-			.get(`https://randomuser.me/api/?results=500`)
-			.then((res) => setRandomAvatars(res.data.results))
-			.catch((err) => console.log(err));
-	}, []);
+	// //GET 500 random AVATARS
+	// useEffect(() => {
+	// 	axios
+	// 		.get(`https://randomuser.me/api/?results=500`)
+	// 		.then((res) => setRandomAvatars(res.data.results))
+	// 		.catch((err) => console.log(err));
+	// }, []);
 
 	//CLEAR EVENT DATA
 	const clearEventData = () => {

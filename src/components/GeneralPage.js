@@ -526,7 +526,11 @@ const EventsPage = () => {
 																	className={classes.aGroup}
 																>
 																	<Avatar
-																		src={randomAvatars[i++].picture.thumbnail}
+																		src={
+																			randomAvatars
+																				? randomAvatars[i++].picture.thumbnail
+																				: null
+																		}
 																	>
 																		{item.organizer.name
 																			.slice(0, 1)
