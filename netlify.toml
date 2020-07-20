@@ -1,0 +1,41 @@
+
+  [[redirects]]
+  from ="/login"
+  to="https://paretaserver.herokuapp.com/login"
+  status=200
+
+  [[redirects]]
+  from = "/articles/:id"
+  to = "https://paretaserver.herokuapp.com/articles/:id"
+  force = true
+  status=200
+
+  [[redirects]]
+  from = "/articles/search"
+  to = "https://paretaserver.herokuapp.com/articles/search"
+  force = true
+  status=200
+
+  [[redirects]]
+  from = "/articles/favorite"
+  to = "https://paretaserver.herokuapp.com/articles/favorite"
+  force = true
+  status=200
+
+  [[redirects]]
+  from = "/articles"
+  to = "https://paretaserver.herokuapp.com/articles/"
+  force = true
+  status=200
+
+  [[redirects]]
+  from = "/messages/received/:id"
+  to = "https://paretaserver.herokuapp.com/messages/received/:id"
+  force = true
+  status=200
+
+  [[redirects]]
+  from = "/messages"
+  to = "https://paretaserver.herokuapp.com/messages/"
+  force = true
+  status=200
