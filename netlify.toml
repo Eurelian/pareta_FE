@@ -128,6 +128,21 @@
   status=200
 
   [[redirects]]
+  from ="/dashboard/parent/:id"
+  to="https://paretaserver.herokuapp.com/dashboard/parent/:id"
+  status=200
+
+  [[redirects]]
+  from ="/dashboard/favorite-parents"
+  to="https://paretaserver.herokuapp.com/dashboard/favorite-parents"
+  status=200
+
+  [[redirects]]
+  from ="/dashboard/favorite-parent"
+  to="https://paretaserver.herokuapp.com/dashboard/favorite-parent"
+  status=200
+
+  [[redirects]]
   from ="/dashboard"
   to="https://paretaserver.herokuapp.com/dashboard"
   status=200
