@@ -1,8 +1,16 @@
 [[redirects]]
+from = "/login"
+to = "https://paretaserver.herokuapp.com/login"
+
+[[redirects]]
+from = "/register"
+to = "https://paretaserver.herokuapp.com/register"
+
+[[redirects]]
+from = "/dashboard"
+to = "https://paretaserver.herokuapp.com/dashboard/*"
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[[redirects]]
-from = "/login"
-to = "https://paretaserver.herokuapp.com/login"
