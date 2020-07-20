@@ -11,7 +11,7 @@
 
 
  [[redirects]]
-  from ="/events/:id"
+  from ="/events/events/:id"
   to="https://paretaserver.herokuapp.com/events/:id"
   status=200
 
