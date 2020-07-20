@@ -1,1 +1,3 @@
 /login https://paretaserver.herokuapp.com/login 301
+/dashboard https://paretaserver.herokuapp.com/dashboard 301
+/events https://paretaserver.herokuapp.com/dashboard/events
