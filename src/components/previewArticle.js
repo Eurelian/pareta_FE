@@ -153,7 +153,6 @@ const ArticlePreview = () => {
 				.get("/articles/preview")
 				.then((res) => {
 					setArticles(res);
-					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}

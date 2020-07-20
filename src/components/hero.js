@@ -118,7 +118,6 @@ const capitalize = (str) => {
 const Hero = () => {
 	const classes = useStyles();
 	const { loggedInParent } = useContext(parentContext);
-	console.log(loggedInParent);
 
 	if (loggedInParent)
 		return (

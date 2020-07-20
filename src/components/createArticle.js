@@ -58,8 +58,6 @@ const CreateArticle = () => {
 
 	const handleEditorChange = (e) => {
 		setBlog({ ...blog, text: e.target.getContent() });
-
-		console.log(blog.text);
 	};
 
 	const handleTitle = (e) => {
@@ -76,7 +74,6 @@ const CreateArticle = () => {
 					text: blog.text,
 				})
 				.then((res) => {
-					console.log(res);
 					setBlog({ title: "", text: "" });
 					setArticlesCreated(res.data.articles_created);
 					setIsSubmitted(true);

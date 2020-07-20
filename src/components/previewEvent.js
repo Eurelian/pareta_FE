@@ -173,7 +173,6 @@ const EventPreview = () => {
 				.get("/events")
 				.then((res) => {
 					setEvents(res.data.slice(0, 7));
-					console.log(res.data);
 				})
 				.catch((err) => console.log(err));
 		}

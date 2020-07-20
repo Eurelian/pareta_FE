@@ -97,6 +97,7 @@
  status=200
 
 
+
  [[redirects]]
  from= "/dashboard/events/created/"
  to="https://paretaserver.herokuapp.com/dashboard/events/created/"

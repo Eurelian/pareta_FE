@@ -178,7 +178,6 @@ const AllPosts = () => {
 				.get(`dashboard/posts/favorite`)
 				.then((res) => {
 					setArticlesFavorite(res.data.articles_favorite);
-					console.log(res.data.articles_favorite);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -187,7 +186,7 @@ const AllPosts = () => {
 	//SEARCH ARTICLES - done
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
-		console.log("works");
+
 		const token = Cookies.get("parent-token");
 		if (token) {
 			refresh();
@@ -195,7 +194,6 @@ const AllPosts = () => {
 				.post(`articles/search`, { query: articleSearch })
 				.then((res) => {
 					if (res.data.length < 1) {
-						console.log(isResult);
 						return setIsResult(false);
 					}
 					setIsResult(true);
@@ -228,7 +226,6 @@ const AllPosts = () => {
 				.get(`dashboard/posts`)
 				.then((res) => {
 					setArticlesCreated(res.data.articles_created);
-					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}
