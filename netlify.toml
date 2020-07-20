@@ -102,6 +102,30 @@
  to="https://paretaserver.herokuapp.com/dashboard/events/created/"
  status=200
 
+ [[redirects]]
+  from ="/dashboard/events"
+  to="https://paretaserver.herokuapp.com/dashboard/events"
+  status=200
+
+[[redirects]]
+  from ="/dashboard/posts/favorite/:id"
+  to="https://paretaserver.herokuapp.com/dashboard/posts/favorite/:id"
+  status=200
+
+[[redirects]]
+  from ="/dashboard/posts/favorite"
+  to="https://paretaserver.herokuapp.com/dashboard/posts/favorite"
+  status=200
+
+[[redirects]]
+  from ="/dashboard/post/favorite/:id"
+  to="https://paretaserver.herokuapp.com/dashboard/post/favorite/:id"
+  status=200
+
+[[redirects]]
+  from ="/dashboard/posts"
+  to="https://paretaserver.herokuapp.com/dashboard/posts"
+  status=200
 
   [[redirects]]
   from ="/dashboard"
