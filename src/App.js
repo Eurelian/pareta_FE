@@ -83,12 +83,12 @@ const App = () => {
 				.then((res) => setEventData(res.data))
 				.catch((err) => console.log(err));
 		}
-	}, []);
+	}, [setEventData]);
 
-	//GET 50 random AVATARS
+	//GET 100 random AVATARS
 	useEffect(() => {
 		axios
-			.get(`https://randomuser.me/api/?results=50`)
+			.get(`https://randomuser.me/api/?results=500`)
 			.then((res) => setRandomAvatars(res.data.results))
 			.catch((err) => console.log(err));
 	}, []);
@@ -331,7 +331,7 @@ const App = () => {
 												path='/parents/'
 												component={ParentChat}
 											></ProtectedRoute>
-											<Route path='/parents'></Route>
+
 											<ProtectedRoute
 												isLoggedIn={isLoggedIn}
 												path='/events/:id'

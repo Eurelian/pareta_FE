@@ -339,9 +339,9 @@ const ParentChat = () => {
 																		<Avatar
 																			className={classes.avatarSize}
 																			src={
-																				randomAvatars[
-																					Math.floor(Math.random() * 49) + 1
-																				].picture.thumbnail
+																				randomAvatars
+																					? randomAvatars[i++].picture.thumbnail
+																					: null
 																			}
 																		></Avatar>
 																		<Typography
@@ -377,7 +377,11 @@ const ParentChat = () => {
 														<Grid item container alignItems='center' xs>
 															{" "}
 															<Avatar
-																src={randomAvatars[0].picture.thumbnail}
+																src={
+																	randomAvatars
+																		? randomAvatars[15].picture.thumbnail
+																		: null
+																}
 															></Avatar>
 															<Typography className={classes.selectedUserName}>
 																{selectedParent.name}

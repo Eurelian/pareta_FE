@@ -3,6 +3,7 @@ import React, { Fragment, useContext } from "react";
 //PACKAGES
 import { Box, Typography, Button } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 //ASSETS
 import heroMom from "../img/hero_mom_window.svg";
@@ -132,7 +133,9 @@ const Hero = () => {
 							{" "}
 							get to connect with like minded parents in your area.
 						</Typography>
-						<HeroButton>Get started</HeroButton>
+						<Link to='/events' style={{ textDecoration: "none" }}>
+							<HeroButton>Get started</HeroButton>
+						</Link>
 					</Box>
 					<Box className={classes.heroImgContainer}>
 						{/* <img

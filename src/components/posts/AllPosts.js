@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import { paretaClient, refresh } from "../../utils/paretaClient";
 import { faPenSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FadeIn from "react-fade-in";
 
 //COMPONENTS
 import NavBar from "../navbar";
@@ -47,10 +48,11 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "25px",
 	},
 
-	gridContainer: { padding: "50px" },
+	gridContainer: { padding: "50px", width: "100%" },
 
 	container: {
 		maxWidth: "1270px",
+		width: "100%",
 		height: "auto",
 		display: "flex",
 		margin: "0 auto",
@@ -256,62 +258,66 @@ const AllPosts = () => {
 							<Grid container className={classes.container}>
 								{articlesCreated ? (
 									<>
-										<Grid item xs={12}>
-											<Typography className={classes.sectionTitle}>
-												Experiences You Shared{" "}
-											</Typography>
-										</Grid>
-										<Grid container justify='flex-start'>
-											{articlesCreated.map((item) => {
-												return (
-													<>
-														<Grid
-															key={item._id}
-															item
-															className={classes.cardContainer}
-															xs={3}
-														>
-															<Card className={classes.card}>
-																<CardActionArea
-																	className={classes.cardAction}
-																	component={Link}
-																	to={`/posts/${item._id}`}
-																>
-																	<CardMedia
-																		className={classes.cardImage}
-																		image={event}
-																	></CardMedia>
-																	<CardContent className={classes.cardContent}>
-																		<Typography className={classes.cardTitle}>
-																			{item.title}
-																		</Typography>
-																	</CardContent>
-																</CardActionArea>
-															</Card>
-														</Grid>
-													</>
-												);
-											})}
-											<Grid
-												item
-												className={classes.cardContainer}
-												container
-												alignItems='center'
-												xs={3}
-											>
-												<Fab
-													className={classes.addbtn}
-													component={Link}
-													to='/new-article'
-												>
-													<FontAwesomeIcon
-														className={classes.addIcon}
-														icon={faPenSquare}
-														size='3x'
-													></FontAwesomeIcon>
-												</Fab>
+										<FadeIn>
+											<Grid item xs={12}>
+												<Typography className={classes.sectionTitle}>
+													Experiences You Shared{" "}
+												</Typography>
 											</Grid>
-										</Grid>
+											<Grid container justify='flex-start'>
+												{articlesCreated.map((item) => {
+													return (
+														<>
+															<Grid
+																key={item._id}
+																item
+																className={classes.cardContainer}
+																xs={3}
+															>
+																<Card className={classes.card}>
+																	<CardActionArea
+																		className={classes.cardAction}
+																		component={Link}
+																		to={`/posts/${item._id}`}
+																	>
+																		<CardMedia
+																			className={classes.cardImage}
+																			image={event}
+																		></CardMedia>
+																		<CardContent
+																			className={classes.cardContent}
+																		>
+																			<Typography className={classes.cardTitle}>
+																				{item.title}
+																			</Typography>
+																		</CardContent>
+																	</CardActionArea>
+																</Card>
+															</Grid>
+														</>
+													);
+												})}
+												<Grid
+													item
+													className={classes.cardContainer}
+													container
+													alignItems='center'
+													xs={3}
+												>
+													<Fab
+														className={classes.addbtn}
+														component={Link}
+														to='/new-article'
+													>
+														<FontAwesomeIcon
+															className={classes.addIcon}
+															icon={faPenSquare}
+															size='3x'
+														></FontAwesomeIcon>
+													</Fab>
+												</Grid>
+											</Grid>
+										</FadeIn>
 										<Grid item xs={12}>
 											<div className={classes.divider}></div>
 										</Grid>
@@ -331,7 +337,7 @@ const AllPosts = () => {
 											</Typography>
 										</Grid>
 										<Grid container justify='flex-start'>
-											{articlesFavorite.map((item) => {
+											{articlesFavorite.map((item, i) => {
 												return (
 													<>
 														<Grid
@@ -359,7 +365,11 @@ const AllPosts = () => {
 																			alignItems='center'
 																			className={classes.authorInfo}
 																		>
-																			<Avatar></Avatar>
+																			<Avatar
+																				src={
+																					randomAvatars[i++].picture.thumbnail
+																				}
+																			></Avatar>
 																			<Typography
 																				className={classes.authorName}
 																			>
@@ -406,7 +416,7 @@ const AllPosts = () => {
 											</Grid>
 										</Grid>
 										<Grid container justify='flex-start'>
-											{articles.map((item) => {
+											{articles.map((item, i) => {
 												return (
 													<>
 														<Grid
@@ -436,9 +446,7 @@ const AllPosts = () => {
 																		>
 																			<Avatar
 																				src={
-																					randomAvatars[
-																						Math.floor(Math.random() * 49) + 1
-																					].picture.thumbnail
+																					randomAvatars[i++].picture.thumbnail
 																				}
 																			></Avatar>
 																			<Typography

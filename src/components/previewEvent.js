@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 
 //PACKAGES
 import {
@@ -18,6 +18,9 @@ import { Link } from "react-router-dom";
 
 //ASSETS
 import event from "../img/neigbourhood.svg";
+
+//CONTEXTS
+import eventContext from "./contexts/eventContext";
 
 //UTILS
 import Cookies from "js-cookie";
@@ -176,6 +179,8 @@ const EventPreview = () => {
 		}
 	}, []);
 
+	const { randomAvatars } = useContext(eventContext);
+
 	return (
 		<Fragment>
 			<Grid
@@ -232,7 +237,13 @@ const EventPreview = () => {
 															alignItems='center'
 															className={classes.aGroup}
 														>
-															<Avatar>
+															<Avatar
+																src={
+																	randomAvatars
+																		? randomAvatars[i++].picture.thumbnail
+																		: null
+																}
+															>
 																{item.organizer.name.slice(0, 1).toUpperCase()}
 															</Avatar>
 															<Typography className={classes.authorName}>

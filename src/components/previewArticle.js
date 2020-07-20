@@ -177,8 +177,8 @@ const ArticlePreview = () => {
 						</Grid>
 						<Grid item xs={12} container>
 							<Grid container justify='center' style={{ margin: "0, auto" }}>
-								{articles ? (
-									articles.data.map((item, i) => {
+								{articles !== null ? (
+									articles.data.slice(0, 7).map((item, i) => {
 										return (
 											<Grid
 												item
@@ -213,9 +213,9 @@ const ArticlePreview = () => {
 																<Avatar
 																	className={classes.avatar}
 																	src={
-																		randomAvatars[
-																			Math.floor(Math.random() * 49) + 1
-																		].picture.thumbnail
+																		randomAvatars
+																			? randomAvatars[i++].picture.thumbnail
+																			: null
 																	}
 																>
 																	{item.author.name.slice(0, 1).toUpperCase()}

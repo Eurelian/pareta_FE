@@ -194,8 +194,9 @@ const ArticlePage = () => {
 												<Avatar
 													size='4x'
 													src={
-														randomAvatars[Math.floor(Math.random() * 49) + 1]
-															.picture.thumbnail
+														randomAvatars
+															? randomAvatars[13].picture.thumbnail
+															: null
 													}
 												>
 													{article.author.name.slice(0, 1).toUpperCase()}

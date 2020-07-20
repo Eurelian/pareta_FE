@@ -208,7 +208,6 @@ const EventsPage = () => {
 				.get("/dashboard/events/created")
 				.then((res) => {
 					setEventsCreated(res.data.events_created);
-					console.log(res);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -226,11 +225,10 @@ const EventsPage = () => {
 				.post(`/events/search`, { query: eventSearch })
 				.then((res) => {
 					if (res.data.length < 1) {
-						console.log(isResult);
 						return setIsResult(false);
 					}
 					setIsResult(true);
-					console.log(res.data);
+
 					setEventData(res.data);
 				})
 				.catch((err) => console.log(err));
@@ -245,7 +243,6 @@ const EventsPage = () => {
 			paretaClient
 				.get("dashboard/events/subscribed")
 				.then((res) => {
-					console.log(res.data.events_subscribed);
 					setEventsSubscribed(res.data.events_subscribed);
 				})
 				.catch((err) => console.log(err));
@@ -394,9 +391,10 @@ const EventsPage = () => {
 																		>
 																			<Avatar
 																				src={
-																					randomAvatars[
-																						Math.floor(Math.random() * 49) + 1
-																					].picture.thumbnail
+																					randomAvatars
+																						? randomAvatars[i++].picture
+																								.thumbnail
+																						: null
 																				}
 																			></Avatar>
 																			<Typography
@@ -528,11 +526,7 @@ const EventsPage = () => {
 																	className={classes.aGroup}
 																>
 																	<Avatar
-																		src={
-																			randomAvatars[
-																				Math.floor(Math.random() * 49) + 1
-																			].picture.thumbnail
-																		}
+																		src={randomAvatars[i++].picture.thumbnail}
 																	>
 																		{item.organizer.name
 																			.slice(0, 1)

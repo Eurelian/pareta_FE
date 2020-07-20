@@ -30,16 +30,19 @@ import { handleDate } from "../utils/dateConversion";
 const useStyles = makeStyles((theme) => ({
 	container: {
 		marginBottom: "25px",
+
 		// [theme.breakpoints.down("sm")]: { marginBottom: "0px" },
 	},
 
 	containerMain: {
 		padding: "50px",
+		width: "100%",
 	},
 
 	containerSecond: {
 		maxWidth: "1270px",
 		width: "100%",
+		margin: "0 auto",
 	},
 	title: {
 		fontSize: "2.8rem",
@@ -138,7 +141,6 @@ const EventDetails = () => {
 		setEventsSubscribed,
 		setIsCreated,
 		isCreated,
-
 		singleEvent,
 		setSingleEvent,
 		randomAvatars,
@@ -174,7 +176,6 @@ const EventDetails = () => {
 				.get(`events/${id}`)
 				.then((res) => {
 					setSingleEvent(res.data);
-
 					if (res.data.attending.length === res.data.size) setIsFull(true);
 					else setIsFull(false);
 					console.log(res.data);
@@ -198,6 +199,7 @@ const EventDetails = () => {
 
 	//EVENT IS CREATED GET - done
 	useEffect(() => {
+		setIsCreated(false);
 		const token = Cookies.get("parent-token");
 		if (token) {
 			paretaClient
@@ -268,7 +270,7 @@ const EventDetails = () => {
 				justify='center'
 				className={classes.container}
 			>
-				<Grid item xs={12} className={classes.containerMain}>
+				<Grid item xs={12} className={classes.containerMain} justify='center'>
 					<Grid container justify='center' className={classes.containerSecond}>
 						<Paper className={classes.background}>
 							{singleEvent === null || singleEvent.length < 1 ? (
@@ -376,7 +378,11 @@ const EventDetails = () => {
 															>
 																<Avatar
 																	size='xs'
-																	src={randomAvatars[0].picture.thumbnail}
+																	src={
+																		randomAvatars
+																			? randomAvatars[0].picture.thumbnail
+																			: null
+																	}
 																></Avatar>
 																<Typography className={classes.organizer}>
 																	{singleEvent.organizer.name}
@@ -393,9 +399,9 @@ const EventDetails = () => {
 																		<Avatar
 																			key={i++}
 																			src={
-																				randomAvatars[
-																					Math.floor(Math.random() * 49) + 1
-																				].picture.thumbnail
+																				randomAvatars
+																					? randomAvatars[i++].picture.thumbnail
+																					: null
 																			}
 																		>
 																			{item.name.slice(0, 1).toUpperCase()}
