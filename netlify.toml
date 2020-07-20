@@ -5,6 +5,22 @@
   status=200
 
   [[redirects]]
+  from ="/register"
+  to="https://paretaserver.herokuapp.com/register"
+  status=200
+
+  [[redirects]]
+  from ="/dashboard"
+  to="https://paretaserver.herokuapp.com/dashboard"
+  status=200
+
+  [[redirects]]
+  from ="/events"
+  to="https://paretaserver.herokuapp.com/events"
+  status=200
+
+
+  [[redirects]]
   from = "/articles/:id"
   to = "https://paretaserver.herokuapp.com/articles/:id"
   force = true
