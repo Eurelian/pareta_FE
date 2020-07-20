@@ -367,7 +367,7 @@ const AllPosts = () => {
 																		>
 																			<Avatar
 																				src={
-																					randomAvatar
+																					randomAvatars
 																						? randomAvatars[i++].picture
 																								.thumbnail
 																						: null
